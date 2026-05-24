@@ -1,4 +1,6 @@
 {
-  "name": "CallShieldClean",
-  "displayName": "CallShieldClean"
+  "name": "CallShield",
+  "displayName": "CallShield",
+  "version": "1.0.0",
+  "buildNumber": 1
 }

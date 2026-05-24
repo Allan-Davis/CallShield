@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>CallShield — Control Who Reaches You</title>
+<meta name="description" content="Block unwanted calls and SMS on Android. Whitelist who matters. Schedule your quiet hours. M-Pesa always works. 100% offline."/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#07090f;
+    --surface:#0e1320;
+    --border:#1c2840;
+    --accent:#2d7dd2;
+    --accent2:#1a5fa8;
+    --green:#22c55e;
+    --green-bg:#0d2010;
+    --green-border:#1a4020;
+    --text:#e8f0ff;
+    --muted:#4a6a90;
+    --dim:#2a3a50;
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;overflow-x:hidden}
+
+  /* NAV */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:18px 5%;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(7,9,15,0.95);backdrop-filter:blur(8px);z-index:100}
+  .nav-logo{font-size:18px;font-weight:800;letter-spacing:-0.5px;color:var(--text)}
+  .nav-logo span{color:var(--accent)}
+  .nav-dl{background:var(--accent);color:#fff;padding:8px 18px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;transition:background 0.2s}
+  .nav-dl:hover{background:var(--accent2)}
+
+  /* HERO */
+  .hero{text-align:center;padding:90px 5% 70px;position:relative}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0,rgba(45,125,210,0.12),transparent);pointer-events:none}
+  .shield{width:88px;height:88px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 28px;animation:glow 3s ease-in-out infinite}
+  @keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(45,125,210,0.3)}50%{box-shadow:0 0 0 16px rgba(45,125,210,0)}}
+  h1{font-size:clamp(36px,6vw,64px);font-weight:900;letter-spacing:-2px;line-height:1.05;margin-bottom:16px}
+  h1 span{color:var(--accent)}
+  .hero-sub{font-size:clamp(15px,2.5vw,19px);color:var(--muted);max-width:500px;margin:0 auto 40px}
+
+  /* DOWNLOAD BUTTON — main CTA */
+  .dl-btn{
+    display:inline-flex;align-items:center;gap:12px;
+    background:var(--accent);color:#fff;
+    font-size:18px;font-weight:800;
+    padding:16px 36px;border-radius:14px;
+    text-decoration:none;transition:background 0.2s,transform 0.15s;
+    border:none;cursor:pointer;letter-spacing:-0.3px
+  }
+  .dl-btn:hover{background:var(--accent2);transform:translateY(-2px)}
+  .dl-btn:active{transform:translateY(0)}
+  .dl-icon{font-size:22px}
+  .dl-sub{font-size:13px;color:var(--muted);margin-top:14px}
+  .dl-sub a{color:var(--accent);text-decoration:none}
+
+  /* INSTALL STEPS */
+  .install{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 32px;max-width:600px;margin:50px auto 0;text-align:left}
+  .install h3{font-size:15px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:20px}
+  .step-row{display:flex;gap:16px;align-items:flex-start;margin-bottom:18px}
+  .step-row:last-child{margin-bottom:0}
+  .step-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+  .step-text{font-size:14px;color:var(--text);line-height:1.6}
+  .step-text b{color:var(--accent);font-weight:700}
+
+  /* FEATURES */
+  .features{padding:80px 5%;max-width:1100px;margin:0 auto}
+  .section-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  h2{font-size:clamp(26px,4vw,40px);font-weight:800;letter-spacing:-1px;margin-bottom:48px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;transition:border-color 0.2s,transform 0.2s}
+  .card:hover{border-color:var(--accent);transform:translateY(-3px)}
+  .card-icon{font-size:30px;margin-bottom:14px}
+  .card h3{font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text)}
+  .card p{font-size:13px;color:var(--muted);line-height:1.7}
+
+  /* MPESA BANNER */
+  .mpesa{background:var(--green-bg);border:1px solid var(--green-border);border-radius:16px;padding:32px;max-width:1100px;margin:0 auto 80px;display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+  .mpesa-icon{font-size:36px;flex-shrink:0}
+  .mpesa h3{font-size:20px;font-weight:800;color:var(--green);margin-bottom:8px}
+  .mpesa p{color:#3a7a3a;font-size:14px;margin-bottom:16px}
+  .tags{display:flex;gap:8px;flex-wrap:wrap}
+  .tag{background:#0d2a10;border:1px solid var(--green-border);color:var(--green);padding:5px 12px;border-radius:100px;font-size:12px;font-weight:700}
+
+  /* PRIVACY */
+  .privacy{text-align:center;padding:60px 5%;border-top:1px solid var(--border)}
+  .privacy-grid{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+  .pill{background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:10px 20px;font-size:13px;color:var(--muted)}
+
+  /* FOOTER */
+  footer{text-align:center;padding:32px 5%;border-top:1px solid var(--border);font-size:13px;color:var(--dim)}
+  footer a{color:var(--accent);text-decoration:none}
+
+  @media(max-width:600px){
+    .install{padding:20px}
+    .mpesa{flex-direction:column;gap:16px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Call<span>Shield</span></div>
+  <a class="nav-dl" href="https://github.com/Allan-Davis/CallShield/releases/latest/download/app-release.apk">⬇ Download APK</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="shield">🛡️</div>
+  <h1>Call<span>Shield</span></h1>
+  <p class="hero-sub">Block all calls and messages. Whitelist who matters. Schedule your quiet hours. M-Pesa always works. 100% offline.</p>
+
+  <a class="dl-btn" href="https://github.com/Allan-Davis/CallShield/releases/latest/download/app-release.apk">
+    <span class="dl-icon">⬇</span>
+    Download APK — Free
+  </a>
+  <p class="dl-sub">Android only · No account needed · <a href="https://github.com/Allan-Davis/CallShield">Open source on GitHub</a></p>
+
+  <!-- Install instructions -->
+  <div class="install">
+    <h3>How to install</h3>
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-text">Tap <b>Download APK</b> above — the file downloads to your phone automatically</div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-text">Go to <b>Settings → Security → Install unknown apps</b> and allow your browser</div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div class="step-text">Open the downloaded file and tap <b>Install</b></div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div class="step-text">Open CallShield → Settings → tap <b>Grant All Permissions</b> → done!</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <p class="section-label">Features</p>
+  <h2>Your phone, your rules</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="card-icon">🛡️</div>
+      <h3>One-tap shield</h3>
+      <p>Instantly block all inbound calls and SMS from anyone not on your whitelist. One tap from the home screen.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">✅</div>
+      <h3>Smart whitelist</h3>
+      <p>Add contacts you always want to reach you. Control calls only, SMS only, or both — per contact.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🕐</div>
+      <h3>Flexible schedules</h3>
+      <p>Set blocking hours by day of week and time. Sleep hours, work hours, lunch breaks — overnight ranges supported.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💰</div>
+      <h3>M-Pesa &amp; Airtel always on</h3>
+      <p>Financial shortcodes are hardcoded to never be blocked. Transact freely even when the shield is fully active.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📶</div>
+      <h3>Data always open</h3>
+      <p>CallShield only blocks calls and SMS. Mobile data, WhatsApp, and internet remain completely unrestricted.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h3>Activity log</h3>
+      <p>See exactly what was blocked and what came through, with timestamps. Full transparency into every decision.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MPESA -->
+<div style="padding:0 5%;max-width:1100px;margin:0 auto 80px">
+  <div class="mpesa">
+    <div class="mpesa-icon">✅</div>
+    <div>
+      <h3>M-Pesa &amp; Airtel Money — always allowed</h3>
+      <p>Financial services are never blocked, no matter what. Hardcoded. Not a setting. Not toggleable. You can always transact.</p>
+      <div class="tags">
+        <span class="tag">M-Pesa 234</span>
+        <span class="tag">M-Pesa 200</span>
+        <span class="tag">M-Pesa 22214</span>
+        <span class="tag">Airtel 100</span>
+        <span class="tag">Airtel 135</span>
+        <span class="tag">All USSD *XXX#</span>
+        <span class="tag">Equity 247</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRIVACY -->
+<section class="privacy">
+  <p class="section-label">Privacy</p>
+  <h2 style="margin-bottom:8px">Nothing leaves your phone</h2>
+  <p style="color:var(--muted);font-size:15px">All rules and logic run 100% on-device. No account, no cloud, no tracking.</p>
+  <div class="privacy-grid">
+    <div class="pill">📵 No account required</div>
+    <div class="pill">🔒 100% offline</div>
+    <div class="pill">🚫 No analytics</div>
+    <div class="pill">👁 No data collected</div>
+    <div class="pill">🆓 Free &amp; open source</div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section style="text-align:center;padding:60px 5%">
+  <a class="dl-btn" href="https://github.com/Allan-Davis/CallShield/releases/latest/download/app-release.apk">
+    <span class="dl-icon">⬇</span>
+    Download CallShield — Free
+  </a>
+  <p class="dl-sub" style="margin-top:16px">Works on Android 8.0 and above</p>
+</section>
+
+<footer>
+  <p>🛡️ <strong>CallShield</strong> — Open source · MIT licensed · Built for Android</p>
+  <p style="margin-top:8px">
+    <a href="https://github.com/Allan-Davis/CallShield">GitHub</a> ·
+    <a href="https://github.com/Allan-Davis/CallShield/releases">All releases</a> ·
+    <a href="https://github.com/Allan-Davis/CallShield/issues">Report a bug</a>
+  </p>
+  <p style="margin-top:12px;font-size:11px;color:var(--dim)">No data collected · No account needed · No internet required to run the app</p>
+</footer>
+
+</body>
+</html>

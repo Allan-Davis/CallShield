@@ -1,0 +1,46 @@
+name: Build CallShield APK
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install npm dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Grant Gradle permission
+        run: chmod +x android/gradlew
+
+      - name: Generate release keystore
+        run: |
+          keytool -genkeypair -v \
+            -keystore android/app/callshield-release.keystore \
+            -alias callshield -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass CallShield@2024 -keypass CallShield@2024 \
+            -dname "CN=CallShield,OU=Mobile,O=CallShield,L=Nairobi,S=Nairobi,C=KE"
+
+      - name: Build Release APK
+        run: cd android && ./gradlew assembleRelease --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CallShield-Release-APK
+          path: android/app/build/outputs/apk/release/app-release.apk
+          retention-days: 30

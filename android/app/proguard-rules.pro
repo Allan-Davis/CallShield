@@ -1,0 +1,2 @@
+-keep class com.callshield.** { *; }
+-keep class com.facebook.react.** { *; }

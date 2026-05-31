@@ -5,30 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CallShield — Block Unwanted Calls & SMS</title>
   <meta name="description" content="CallShield is a free Android app that blocks unwanted calls and SMS. Protect yourself from spam, scams and fraudsters. M-Pesa always allowed." />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #07080f;
-      --card: #0f1623;
-      --card2: #131d2e;
-      --accent: #2d7dd2;
-      --accent-light: #5db8ff;
-      --accent-glow: rgba(45,125,210,0.18);
-      --green: #4caf50;
-      --text: #e8f4ff;
-      --text-mid: #7aa0c0;
-      --text-dim: #3d5a78;
-      --border: #1a2a3e;
-      --red: #e74c3c;
+      --bg:          #1a1208;
+      --bg2:         #221808;
+      --card:        #251e10;
+      --card2:       #2d2514;
+      --accent:      #e8952a;
+      --accent2:     #f0b455;
+      --accent-glow: rgba(232,149,42,0.18);
+      --green:       #6dba6d;
+      --green-bg:    #0d2010;
+      --green-bdr:   #1d4a1d;
+      --text:        #f5ead8;
+      --text-mid:    #b89a6a;
+      --text-dim:    #6b5230;
+      --border:      #3a2d15;
+      --red:         #e05a3a;
+      --red-dim:     rgba(224,90,58,0.12);
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Lato', sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
       overflow-x: hidden;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232,149,42,0.07) 0%, transparent 70%);
     }
 
     /* ── NAV ── */
@@ -42,11 +49,11 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(7,8,15,0.85);
+      background: rgba(26,18,8,0.88);
     }
-    .nav-logo { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 800; color: var(--text); text-decoration: none; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; color: var(--text); text-decoration: none; }
     .nav-logo span { font-size: 1.5rem; }
-    .nav-badge { background: var(--accent); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.5px; }
+    .nav-badge { background: var(--accent); color: #1a1208; font-size: 0.65rem; font-weight: 800; padding: 2px 10px; border-radius: 20px; letter-spacing: 0.8px; }
 
     /* ── HERO ── */
     .hero {
@@ -58,32 +65,33 @@
     .hero::before {
       content: '';
       position: absolute;
-      top: -120px; left: 50%; transform: translateX(-50%);
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(45,125,210,0.12) 0%, transparent 70%);
+      top: -80px; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(circle, rgba(232,149,42,0.10) 0%, transparent 65%);
       pointer-events: none;
     }
     .hero-icon { font-size: 5rem; margin-bottom: 24px; display: block; animation: float 3s ease-in-out infinite; }
     @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
 
-    .hero h1 { font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 900; letter-spacing: -1px; margin-bottom: 16px; background: linear-gradient(135deg, #fff 30%, var(--accent-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .hero p { font-size: clamp(1rem, 2.5vw, 1.2rem); color: var(--text-mid); max-width: 520px; margin: 0 auto 36px; line-height: 1.7; }
+    .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 900; letter-spacing: -1px; margin-bottom: 16px; background: linear-gradient(135deg, #f5ead8 30%, var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { font-size: clamp(1rem, 2.5vw, 1.15rem); color: var(--text-mid); max-width: 520px; margin: 0 auto 36px; line-height: 1.75; }
 
     .download-btn {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      background: linear-gradient(135deg, #1e56a0, var(--accent));
-      color: #fff;
+      background: linear-gradient(135deg, #c06a10, var(--accent));
+      color: #1a1208;
       text-decoration: none;
-      font-size: 1.1rem;
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem;
       font-weight: 800;
-      padding: 16px 36px;
+      padding: 16px 38px;
       border-radius: 50px;
       transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 8px 32px rgba(45,125,210,0.35);
+      box-shadow: 0 8px 32px rgba(232,149,42,0.35);
     }
-    .download-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(45,125,210,0.5); }
+    .download-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(232,149,42,0.5); }
     .download-btn:active { transform: translateY(0); }
     .download-icon { font-size: 1.3rem; }
 
@@ -111,11 +119,12 @@
     }
     .trust-pill .icon { font-size: 1rem; }
 
-    /* ── FEATURES ── */
+    /* ── SECTIONS ── */
     .section { padding: 60px 24px; max-width: 1100px; margin: 0 auto; }
-    .section-title { text-align: center; font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 800; margin-bottom: 8px; }
+    .section-title { font-family: 'Syne', sans-serif; text-align: center; font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 800; margin-bottom: 8px; }
     .section-sub { text-align: center; color: var(--text-mid); margin-bottom: 44px; font-size: 0.95rem; }
 
+    /* ── FEATURES ── */
     .features-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -130,8 +139,115 @@
     }
     .feature-card:hover { border-color: var(--accent); transform: translateY(-3px); }
     .feature-icon { font-size: 2rem; margin-bottom: 14px; display: block; }
-    .feature-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .feature-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
     .feature-desc { font-size: 0.88rem; color: var(--text-mid); line-height: 1.6; }
+
+    /* ── PROACTIVE SECTION ── */
+    .proactive-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+    }
+    .proactive-intro {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+    .proactive-intro .big-claim {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.1rem, 3vw, 1.45rem);
+      font-weight: 800;
+      color: var(--accent2);
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+    .vs-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .vs-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 22px 20px;
+      text-align: left;
+    }
+    .vs-card.bad { border: 1px solid rgba(224,90,58,0.3); }
+    .vs-card.good { border: 1px solid rgba(109,186,109,0.3); }
+    .vs-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .vs-card.bad .vs-label { color: var(--red); }
+    .vs-card.good .vs-label { color: var(--green); }
+    .vs-items { list-style: none; }
+    .vs-items li { font-size: 0.87rem; color: var(--text-mid); line-height: 1.6; padding: 5px 0; border-bottom: 1px solid var(--border); }
+    .vs-items li:last-child { border-bottom: none; }
+    .vs-items li::before { margin-right: 8px; }
+    .vs-card.bad .vs-items li::before { content: '✗'; color: var(--red); }
+    .vs-card.good .vs-items li::before { content: '✓'; color: var(--green); }
+
+    /* ── COMPARISON TABLE ── */
+    .compare-wrap { overflow-x: auto; margin-top: 8px; }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .compare-table th {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+      color: var(--text-mid);
+      font-size: 0.82rem;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+    .compare-table th:first-child { color: var(--text); }
+    .compare-table th.col-cs { color: var(--accent); }
+    .compare-table td {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-mid);
+      vertical-align: middle;
+    }
+    .compare-table td:first-child { color: var(--text); font-weight: 700; font-size: 0.88rem; }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .tick { color: var(--green); font-size: 1.1rem; font-weight: 900; }
+    .cross { color: var(--red); font-size: 1rem; font-weight: 700; }
+    .partial { color: var(--text-mid); font-size: 0.8rem; }
+    .compare-table .col-cs { background: rgba(232,149,42,0.05); }
+
+    /* ── WHO NEEDS ── */
+    .who-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .who-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 20px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .who-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    .who-icon { font-size: 1.9rem; margin-bottom: 12px; display: block; }
+    .who-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+    .who-desc { font-size: 0.84rem; color: var(--text-mid); line-height: 1.55; }
 
     /* ── HOW IT WORKS ── */
     .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
@@ -144,12 +260,13 @@
     }
     .step-num {
       width: 44px; height: 44px; border-radius: 50%;
-      background: linear-gradient(135deg, #1e56a0, var(--accent));
-      color: #fff; font-size: 1.1rem; font-weight: 800;
+      background: linear-gradient(135deg, #c06a10, var(--accent));
+      color: #1a1208; font-size: 1.1rem; font-weight: 800;
       display: flex; align-items: center; justify-content: center;
       margin: 0 auto 16px;
+      font-family: 'Syne', sans-serif;
     }
-    .step-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; }
+    .step-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.95rem; margin-bottom: 6px; }
     .step-desc { font-size: 0.85rem; color: var(--text-mid); line-height: 1.5; }
 
     /* ── FINTECH BANNER ── */
@@ -157,8 +274,8 @@
       margin: 0 24px;
       max-width: 1052px;
       margin-left: auto; margin-right: auto;
-      background: linear-gradient(135deg, #0a1f0a, #0d2a0d);
-      border: 1px solid #1a4020;
+      background: linear-gradient(135deg, var(--green-bg), #0f2a10);
+      border: 1px solid var(--green-bdr);
       border-radius: 20px;
       padding: 28px 32px;
       display: flex;
@@ -167,10 +284,31 @@
       flex-wrap: wrap;
     }
     .fintech-icon { font-size: 2.5rem; flex-shrink: 0; }
-    .fintech-text h3 { color: var(--green); font-size: 1rem; font-weight: 800; margin-bottom: 6px; }
+    .fintech-text h3 { font-family: 'Syne', sans-serif; color: var(--green); font-size: 1rem; font-weight: 800; margin-bottom: 6px; }
     .fintech-text p { color: #4a8a4a; font-size: 0.87rem; line-height: 1.6; }
     .fintech-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-    .fintech-pill { background: rgba(76,175,80,0.12); border: 1px solid rgba(76,175,80,0.25); border-radius: 50px; padding: 4px 12px; font-size: 0.78rem; color: var(--green); font-weight: 600; }
+    .fintech-pill { background: rgba(109,186,109,0.1); border: 1px solid rgba(109,186,109,0.25); border-radius: 50px; padding: 4px 12px; font-size: 0.78rem; color: var(--green); font-weight: 700; }
+
+    /* ── AIRPLANE MODE CALLOUT ── */
+    .airplane-callout {
+      max-width: 1052px;
+      margin: 0 auto 60px;
+      padding: 0 24px;
+    }
+    .airplane-inner {
+      background: var(--red-dim);
+      border: 1px solid rgba(224,90,58,0.22);
+      border-radius: 16px;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.88rem;
+      color: #d08878;
+      line-height: 1.6;
+    }
+    .airplane-inner .icon { font-size: 1.6rem; flex-shrink: 0; }
+    .airplane-inner strong { color: var(--red); }
 
     /* ── INSTALL GUIDE ── */
     .install-box {
@@ -181,20 +319,20 @@
     }
     .install-step { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
     .install-step:last-child { margin-bottom: 0; }
-    .install-num { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .install-num { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: #1a1208; font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
     .install-content strong { display: block; color: var(--text); font-weight: 700; margin-bottom: 4px; }
     .install-content span { font-size: 0.87rem; color: var(--text-mid); line-height: 1.5; }
-    .install-warning { background: rgba(231,76,60,0.08); border: 1px solid rgba(231,76,60,0.2); border-radius: 12px; padding: 14px 18px; margin-top: 20px; font-size: 0.85rem; color: #e0a0a0; line-height: 1.6; }
+    .install-warning { background: var(--red-dim); border: 1px solid rgba(224,90,58,0.2); border-radius: 12px; padding: 14px 18px; margin-top: 20px; font-size: 0.85rem; color: #e0a090; line-height: 1.6; }
     .install-warning strong { color: var(--red); }
 
     /* ── CTA ── */
     .cta-section {
       text-align: center;
       padding: 80px 24px;
-      background: linear-gradient(180deg, transparent, rgba(45,125,210,0.05));
+      background: linear-gradient(180deg, transparent, rgba(232,149,42,0.05));
     }
-    .cta-section h2 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; margin-bottom: 12px; }
-    .cta-section p { color: var(--text-mid); margin-bottom: 32px; }
+    .cta-section h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 900; margin-bottom: 12px; }
+    .cta-section p { color: var(--text-mid); margin-bottom: 28px; font-size: 0.95rem; }
 
     /* ── FOOTER ── */
     footer {
@@ -214,6 +352,8 @@
       .hero { padding: 60px 18px 40px; }
       .fintech-banner { padding: 22px 20px; }
       .install-box { padding: 22px 18px; }
+      .vs-cards { grid-template-columns: 1fr; }
+      .compare-table th, .compare-table td { padding: 10px 12px; font-size: 0.82rem; }
     }
   </style>
 </head>
@@ -247,6 +387,98 @@
     <div class="trust-pill"><span class="icon">🆓</span> Completely Free</div>
     <div class="trust-pill"><span class="icon">📵</span> No Ads</div>
     <div class="trust-pill"><span class="icon">🇰🇪</span> Built for Kenya</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PROACTIVE VS REACTIVE -->
+  <section class="section" style="padding-bottom:20px;">
+    <h2 class="section-title">Why Not Just Use Phone's Built-in Block?</h2>
+    <p class="section-sub">There's a critical difference between reactive and proactive blocking</p>
+  </section>
+
+  <div class="proactive-section">
+    <div class="proactive-intro">
+      <div class="big-claim">Built-in phone blocking is reactive — CallShield is proactive.</div>
+      <div class="vs-cards">
+        <div class="vs-card bad">
+          <div class="vs-label">📱 Phone Built-in Block</div>
+          <ul class="vs-items">
+            <li>You still see the call come in</li>
+            <li>You still get the notification</li>
+            <li>You still get distracted</li>
+            <li>Then you block — after the damage</li>
+          </ul>
+        </div>
+        <div class="vs-card good">
+          <div class="vs-label">🛡️ CallShield</div>
+          <ul class="vs-items">
+            <li>The call never reaches you</li>
+            <li>Caller hears "offline" immediately</li>
+            <li>You see nothing, no interruption</li>
+            <li>Protected before anything happens</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARISON TABLE -->
+    <div class="compare-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Phone Built-in</th>
+            <th class="col-cs">CallShield</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Block unknown numbers</td>
+            <td><span class="cross">✗</span></td>
+            <td class="col-cs"><span class="tick">✓</span></td>
+          </tr>
+          <tr>
+            <td>Schedule blocking (nights/weekends)</td>
+            <td><span class="cross">✗</span></td>
+            <td class="col-cs"><span class="tick">✓</span></td>
+          </tr>
+          <tr>
+            <td>Block SMS silently</td>
+            <td><span class="partial">Limited</span></td>
+            <td class="col-cs"><span class="tick">✓</span></td>
+          </tr>
+          <tr>
+            <td>Caller hears "offline/unavailable"</td>
+            <td><span class="cross">✗ rings → voicemail</span></td>
+            <td class="col-cs"><span class="tick">✓ instant</span></td>
+          </tr>
+          <tr>
+            <td>Whitelist only specific people</td>
+            <td><span class="cross">✗</span></td>
+            <td class="col-cs"><span class="tick">✓</span></td>
+          </tr>
+          <tr>
+            <td>Activity log of what was blocked</td>
+            <td><span class="cross">✗</span></td>
+            <td class="col-cs"><span class="tick">✓</span></td>
+          </tr>
+          <tr>
+            <td>M-Pesa always gets through</td>
+            <td><span class="cross">✗ you manage it manually</span></td>
+            <td class="col-cs"><span class="tick">✓ automatic</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- AIRPLANE MODE CALLOUT -->
+  <div class="airplane-callout">
+    <div class="airplane-inner">
+      <span class="icon">✈️</span>
+      <span><strong>Airplane mode is not a solution.</strong> It kills M-Pesa notifications too — you miss real money alerts while trying to avoid spam. CallShield blocks the bad, keeps the good, automatically.</span>
+    </div>
   </div>
 
   <div class="divider"></div>
@@ -285,6 +517,41 @@
         <span class="feature-icon">🔋</span>
         <div class="feature-title">Runs in Background</div>
         <div class="feature-desc">Runs as a lightweight background service. Protects you even when your phone is locked or the app is closed. Zero battery drain.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- WHO NEEDS THIS -->
+  <section class="section">
+    <h2 class="section-title">Who Actually Needs This in Kenya</h2>
+    <p class="section-sub">If any of these sound like you, CallShield was built for you</p>
+    <div class="who-grid">
+      <div class="who-card">
+        <span class="who-icon">💼</span>
+        <div class="who-title">Business People</div>
+        <div class="who-desc">Only want calls from clients during work hours. Block everyone else at night and on weekends.</div>
+      </div>
+      <div class="who-card">
+        <span class="who-icon">👨‍👩‍👧</span>
+        <div class="who-title">Parents</div>
+        <div class="who-desc">Block all unknown numbers on your child's phone. Only family and school get through.</div>
+      </div>
+      <div class="who-card">
+        <span class="who-icon">🚨</span>
+        <div class="who-title">Harassment Victims</div>
+        <div class="who-desc">Being harassed by ex-partners, debt collectors, or scammers? Stop them cold — they hear you're offline.</div>
+      </div>
+      <div class="who-card">
+        <span class="who-icon">📢</span>
+        <div class="who-title">People with Public Numbers</div>
+        <div class="who-desc">Doctors, teachers, traders whose number got leaked. Control who can actually reach you.</div>
+      </div>
+      <div class="who-card">
+        <span class="who-icon">🏦</span>
+        <div class="who-title">Fraud Victims</div>
+        <div class="who-desc">Targeted by fake M-Pesa confirmation SMS scams? Block the scammers while real M-Pesa always gets through.</div>
       </div>
     </div>
   </section>

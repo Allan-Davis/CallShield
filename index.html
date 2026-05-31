@@ -7,612 +7,918 @@
 <meta name="description" content="CallShield blocks unwanted calls and SMS on Android. Free, offline, built for Kenya. M-Pesa always gets through."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400;1,9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Bebas+Neue&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 :root{
-  --cream:   #f5f0e8;
-  --warm:    #ede5d4;
-  --sand:    #d9ceb8;
-  --bark:    #2c1f0e;
-  --bark2:   #3d2d14;
-  --coffee:  #6b4423;
-  --rust:    #c0440e;
-  --rust2:   #e8532a;
-  --sage:    #3d6b4f;
-  --sage2:   #5a9168;
-  --sage3:   #a8d4b0;
-  --amber:   #e8a020;
-  --amber2:  #f5c44a;
-  --sky:     #2d6e8f;
-  --sky2:    #4a9abf;
-  --ink:     #1a1208;
-  --muted:   #7a6650;
-  --muted2:  #a89070;
-  --line:    rgba(44,31,14,0.10);
-  --line2:   rgba(44,31,14,0.16);
-  --r: 0.75rem;
+  --void: #1c2333;
+  --deep: #151b28;
+  --surface: #232d42;
+  --glass: rgba(255,255,255,0.05);
+  --glass2: rgba(255,255,255,0.09);
+  --border: rgba(255,255,255,0.09);
+  --border2: rgba(255,255,255,0.16);
+
+  --bio: #ff6b4a;
+  --bio2: #ff5533;
+  --bio3: #c03020;
+  --bio-glow: rgba(255,107,74,0.25);
+  --bio-glow2: rgba(255,107,74,0.08);
+
+  --flame: #ff9f6b;
+  --flame2: #ffb085;
+  --flame-glow: rgba(255,159,107,0.2);
+
+  --gold: #ffd166;
+  --gold2: #f5b942;
+
+  --sky: #6ee7f7;
+  --sky-glow: rgba(110,231,247,0.12);
+
+  --text: #f0ece4;
+  --text2: rgba(240,236,228,0.58);
+  --text3: rgba(240,236,228,0.32);
+
+  --r: 20px;
+  --r2: 14px;
 }
 
 html{scroll-behavior:smooth}
 
 body{
-  font-family:'Plus Jakarta Sans',sans-serif;
-  background:var(--cream);
-  color:var(--bark);
+  font-family:'Syne',sans-serif;
+  background:var(--void);
+  color:var(--text);
   overflow-x:hidden;
-  font-size:15px;
-  line-height:1.6;
+  cursor:none;
 }
 
-/* ── TEXTURE LAYER ── */
+/* ─── CUSTOM CURSOR ─── */
+#cursor{
+  width:10px;height:10px;
+  background:var(--bio);
+  border-radius:50%;
+  position:fixed;
+  pointer-events:none;
+  z-index:9999;
+  mix-blend-mode:screen;
+  transition:transform 0.15s ease;
+  box-shadow:0 0 20px var(--bio),0 0 40px rgba(0,100,255,0.4);
+}
+#cursor-ring{
+  width:36px;height:36px;
+  border:1.5px solid rgba(0,100,255,0.4);
+  border-radius:50%;
+  position:fixed;
+  pointer-events:none;
+  z-index:9998;
+  transition:all 0.1s ease;
+}
+@media(pointer:coarse){#cursor,#cursor-ring{display:none}body{cursor:auto}}
+
+/* ─── AMBIENT ORBS ─── */
+.orb{
+  position:fixed;border-radius:50%;
+  filter:blur(80px);pointer-events:none;z-index:0;
+  animation:drift 20s ease-in-out infinite;
+}
+.orb1{width:500px;height:500px;background:radial-gradient(circle,rgba(255,107,74,0.10),transparent 70%);top:-100px;left:-100px;animation-delay:0s;}
+.orb2{width:400px;height:400px;background:radial-gradient(circle,rgba(110,231,247,0.08),transparent 70%);bottom:-50px;right:-50px;animation-delay:-7s;}
+.orb3{width:300px;height:300px;background:radial-gradient(circle,rgba(255,107,74,0.07),transparent 70%);top:50%;left:50%;animation-delay:-14s;}
+
+@keyframes drift{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(30px,-20px) scale(1.05)}
+  66%{transform:translate(-20px,30px) scale(0.95)}
+}
+
+/* ─── NOISE TEXTURE ─── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+}
+
+/* ─── SCANLINES ─── */
 body::after{
-  content:'';
-  position:fixed;inset:0;pointer-events:none;z-index:999;
-  opacity:0.028;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)'/%3E%3C/svg%3E");
+  content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
 }
 
 /* ─── NAV ─── */
 nav{
   position:sticky;top:0;z-index:100;
   display:flex;align-items:center;justify-content:space-between;
-  padding:14px 40px;
-  background:rgba(245,240,232,0.88);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--line2);
+  padding:16px 24px;
+  background:rgba(28,35,51,0.82);
+  backdrop-filter:blur(24px) saturate(180%);
+  border-bottom:1px solid var(--border);
 }
 .logo{
-  display:flex;align-items:center;gap:10px;
+  display:flex;align-items:center;gap:12px;
   text-decoration:none;
-  font-family:'Fraunces',serif;
-  font-size:1.2rem;font-weight:700;
-  color:var(--bark);
-  letter-spacing:-0.2px;
-}
-.logo-mark{
-  width:34px;height:34px;border-radius:10px;
-  background:var(--rust);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1rem;
-  box-shadow:2px 3px 0 var(--bark2);
-  flex-shrink:0;
-}
-.nav-right{display:flex;align-items:center;gap:14px;}
-.nav-pill{
-  font-size:0.72rem;font-weight:600;letter-spacing:0.5px;
-  background:var(--sage);color:#fff;
-  padding:4px 12px;border-radius:20px;
+  font-family:'Syne',sans-serif;
+  font-size:1.1rem;font-weight:800;
+  color:var(--text);
+  letter-spacing:1px;
   text-transform:uppercase;
 }
-.btn-nav{
-  background:var(--rust);color:#fff;
-  font-size:0.82rem;font-weight:600;
-  padding:8px 20px;border-radius:8px;
-  text-decoration:none;
-  box-shadow:2px 3px 0 var(--bark2);
-  transition:transform 0.15s,box-shadow 0.15s;
-  white-space:nowrap;
+.logo-mark{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--bio3),var(--bio2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;
+  box-shadow:0 0 20px var(--bio-glow),inset 0 1px 0 rgba(255,255,255,0.1);
+  flex-shrink:0;
+  position:relative;overflow:hidden;
 }
-.btn-nav:hover{transform:translate(-1px,-1px);box-shadow:3px 4px 0 var(--bark2);}
+.logo-mark::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
+}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.nav-badge{
+  font-family:'DM Mono',monospace;
+  font-size:0.65rem;letter-spacing:2px;
+  background:var(--bio-glow2);
+  color:var(--bio2);
+  border:1px solid rgba(255,100,60,0.25);
+  padding:4px 12px;border-radius:20px;
+  text-transform:uppercase;
+  animation:pulse-badge 3s ease-in-out infinite;
+}
+@keyframes pulse-badge{0%,100%{box-shadow:0 0 0 0 rgba(0,100,255,0.2)}50%{box-shadow:0 0 0 6px rgba(0,255,136,0)}}
+
+.btn-nav{
+  background:linear-gradient(135deg,var(--bio2),var(--bio3));
+  color:var(--void);
+  font-family:'Syne',sans-serif;
+  font-size:0.78rem;font-weight:800;
+  padding:10px 22px;border-radius:var(--r2);
+  text-decoration:none;
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+  box-shadow:0 0 30px var(--bio-glow),0 4px 16px rgba(0,0,0,0.4);
+  transition:all 0.3s ease;
+  white-space:nowrap;
+  position:relative;overflow:hidden;
+}
+.btn-nav::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,0.15));
+  opacity:0;transition:opacity 0.3s;
+}
+.btn-nav:hover{transform:translateY(-2px);box-shadow:0 0 50px var(--bio-glow),0 8px 24px rgba(0,0,0,0.4);}
+.btn-nav:hover::before{opacity:1;}
 
 /* ─── HERO ─── */
 .hero{
-  padding:80px 40px 70px;
-  max-width:1100px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 420px;
-  gap:60px;align-items:center;
-  position:relative;
+  position:relative;z-index:2;
+  min-height:100svh;
+  display:grid;grid-template-columns:1fr;
+  align-items:center;
+  padding:60px 24px 80px;
+  overflow:hidden;
 }
-.hero-tag{
-  display:inline-flex;align-items:center;gap:7px;
-  font-size:0.75rem;font-weight:600;letter-spacing:0.3px;
-  color:var(--muted);
-  background:var(--warm);
-  border:1px solid var(--line2);
-  padding:5px 14px;border-radius:20px;
-  margin-bottom:20px;
+.hero-grid{
+  max-width:1200px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1fr auto;
+  gap:40px;align-items:center;
 }
-.hero-tag-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--sage2);
-  animation:blink 2.4s ease-in-out infinite;
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'DM Mono',monospace;
+  font-size:0.7rem;letter-spacing:3px;
+  color:var(--bio2);
+  text-transform:uppercase;
+  margin-bottom:24px;
 }
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.hero-eyebrow-line{width:24px;height:1px;background:var(--bio2);}
 
 .hero h1{
-  font-family:'Fraunces',serif;
-  font-size:clamp(2.2rem,4.5vw,3.2rem);
-  font-weight:700;
-  line-height:1.12;
-  letter-spacing:-1px;
-  margin-bottom:18px;
-  color:var(--ink);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(4rem,12vw,9rem);
+  line-height:0.92;
+  letter-spacing:2px;
+  color:var(--text);
+  margin-bottom:8px;
 }
-.hero h1 em{
-  font-style:italic;font-weight:400;
-  color:var(--rust);
+.hero h1 .accent{
+  color:transparent;
+  -webkit-text-stroke:2px var(--bio);
+  text-shadow:0 0 60px rgba(0,255,136,0.3);
 }
-.hero h1 .green{color:var(--sage);}
+.hero h1 .sub-word{
+  font-family:'Instrument Serif',serif;
+  font-style:italic;
+  font-size:0.7em;
+  color:var(--text2);
+  -webkit-text-stroke:0;
+}
+
+.hero-divider{
+  width:60px;height:2px;
+  background:linear-gradient(90deg,var(--bio),transparent);
+  margin:24px 0;
+}
 
 .hero-sub{
-  font-size:0.97rem;color:var(--muted);
-  max-width:460px;line-height:1.75;
-  margin-bottom:34px;
+  font-family:'DM Mono',monospace;
+  font-size:0.82rem;color:var(--text2);
+  max-width:420px;line-height:1.85;
+  margin-bottom:36px;
+  font-weight:300;
 }
 
-.hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px;}
+.hero-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:28px;}
 
 .btn-main{
-  display:inline-flex;align-items:center;gap:9px;
-  background:var(--rust);color:#fff;
-  font-size:0.9rem;font-weight:600;
-  padding:13px 28px;border-radius:10px;
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,var(--bio),var(--bio2));
+  color:var(--void);
+  font-family:'Syne',sans-serif;
+  font-size:0.85rem;font-weight:800;
+  padding:14px 30px;border-radius:var(--r2);
   text-decoration:none;
-  box-shadow:3px 4px 0 var(--bark2);
-  transition:transform 0.15s,box-shadow 0.15s;
+  letter-spacing:0.5px;text-transform:uppercase;
+  box-shadow:0 0 40px var(--bio-glow),0 8px 32px rgba(0,0,0,0.5);
+  transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  position:relative;overflow:hidden;
 }
-.btn-main:hover{transform:translate(-2px,-2px);box-shadow:5px 6px 0 var(--bark2);}
-.btn-main svg{width:16px;height:16px;flex-shrink:0;}
-
-.btn-outline{
-  display:inline-flex;align-items:center;gap:7px;
-  border:1.5px solid var(--line2);color:var(--muted);
-  font-size:0.88rem;font-weight:500;
-  padding:12px 22px;border-radius:10px;
-  text-decoration:none;
-  transition:border-color 0.2s,color 0.2s;
+.btn-main::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.2),transparent);
+  opacity:0;transition:opacity 0.3s;
 }
-.btn-outline:hover{border-color:var(--bark);color:var(--bark);}
+.btn-main:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 0 80px var(--bio-glow),0 16px 48px rgba(0,0,0,0.5);}
+.btn-main:hover::after{opacity:1;}
 
-.hero-fine{font-size:0.76rem;color:var(--muted2);}
-.hero-fine span{margin:0 6px;}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid var(--border2);color:var(--text2);
+  font-family:'DM Mono',monospace;
+  font-size:0.78rem;font-weight:400;
+  padding:13px 22px;border-radius:var(--r2);
+  text-decoration:none;letter-spacing:1px;
+  transition:all 0.3s ease;
+  backdrop-filter:blur(8px);
+  background:var(--glass);
+}
+.btn-ghost:hover{border-color:rgba(0,255,136,0.3);color:var(--bio2);background:rgba(0,255,136,0.04);}
 
-/* ─── HERO PHONE MOCKUP ─── */
-.hero-visual{
+.hero-meta{
+  display:flex;flex-wrap:wrap;gap:16px;
+}
+.hero-meta-item{
+  display:flex;align-items:center;gap:6px;
+  font-family:'DM Mono',monospace;
+  font-size:0.65rem;color:var(--text3);
+  letter-spacing:1px;text-transform:uppercase;
+}
+.meta-dot{width:4px;height:4px;border-radius:50%;background:var(--bio2);box-shadow:0 0 6px var(--bio);}
+
+/* ─── PHONE MOCKUP ─── */
+.hero-phone{
   position:relative;
-  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
 }
-.phone-frame{
+.phone-wrap{
+  position:relative;
+  animation:phone-float 6s ease-in-out infinite;
+}
+@keyframes phone-float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-16px) rotate(2deg)}}
+
+.phone-glow-ring{
+  position:absolute;inset:-30px;
+  border-radius:60px;
+  background:radial-gradient(ellipse,rgba(0,255,136,0.06) 0%,transparent 60%);
+  animation:glow-pulse 3s ease-in-out infinite;
+}
+@keyframes glow-pulse{0%,100%{opacity:0.6}50%{opacity:1}}
+
+.phone{
   width:200px;
-  background:var(--bark);
-  border-radius:36px;
-  padding:12px;
-  box-shadow:6px 12px 0 var(--bark2), 0 30px 60px rgba(26,18,8,0.25);
+  background:linear-gradient(160deg,#1a2a4a,#0d1830);
+  border-radius:40px;
+  padding:10px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.15),
+    0 40px 80px rgba(0,40,120,0.3),
+    0 0 60px rgba(255,107,74,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.1);
   position:relative;z-index:2;
 }
 .phone-screen{
-  background:var(--ink);
-  border-radius:26px;
+  background:#0a0e1a;
+  border-radius:32px;
   overflow:hidden;
-  aspect-ratio:9/16;
-  display:flex;flex-direction:column;
 }
-.phone-status{
-  background:#111;
-  padding:8px 16px 6px;
-  display:flex;justify-content:space-between;
-  font-size:0.55rem;color:#888;
-}
-.phone-notch{
-  width:60px;height:18px;
-  background:var(--ink);
-  border-radius:0 0 12px 12px;
-  margin:0 auto -4px;
-  position:relative;z-index:2;
-}
-.phone-app{
-  flex:1;padding:12px 10px;
-  display:flex;flex-direction:column;gap:8px;
-}
-.phone-shield-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:8px 10px;
-  background:rgba(61,107,79,0.2);
-  border:1px solid rgba(61,107,79,0.4);
-  border-radius:10px;
-  margin-bottom:4px;
-}
-.phone-shield-label{font-size:0.6rem;color:var(--sage3);font-weight:600;}
-.phone-toggle{
-  width:28px;height:16px;background:var(--sage2);
-  border-radius:8px;position:relative;
-}
-.phone-toggle::after{
-  content:'';
-  position:absolute;right:2px;top:2px;
-  width:12px;height:12px;border-radius:50%;
-  background:#fff;
-}
-.phone-blocked-title{font-size:0.55rem;color:#555;text-transform:uppercase;letter-spacing:0.8px;padding-left:2px;}
-.phone-block-item{
-  display:flex;align-items:center;gap:7px;
-  padding:7px 8px;
-  background:rgba(255,255,255,0.04);
-  border-radius:8px;
-}
-.phone-avatar{
-  width:22px;height:22px;border-radius:50%;
-  background:var(--rust);
+.phone-dynamic-island{
+  width:80px;height:26px;
+  background:#000;
+  border-radius:0 0 16px 16px;
+  margin:0 auto;
   display:flex;align-items:center;justify-content:center;
-  font-size:0.55rem;color:#fff;font-weight:700;
-  flex-shrink:0;
+  gap:6px;
+  position:relative;z-index:3;
 }
-.phone-num{font-size:0.58rem;color:#666;}
-.phone-badge-block{
-  margin-left:auto;
-  font-size:0.48rem;font-weight:700;
-  background:rgba(192,68,14,0.2);color:var(--rust2);
-  padding:2px 6px;border-radius:4px;
-  text-transform:uppercase;
-}
-.phone-mpesa{
-  margin-top:auto;
-  background:rgba(61,107,79,0.15);
-  border:1px solid rgba(90,145,104,0.3);
-  border-radius:8px;
-  padding:8px 10px;
-  display:flex;align-items:center;gap:6px;
-}
-.phone-mpesa-icon{font-size:0.9rem;}
-.phone-mpesa-text{font-size:0.55rem;color:var(--sage3);}
-.phone-mpesa-amount{font-size:0.65rem;font-weight:700;color:var(--sage3);}
+.island-dot{width:7px;height:7px;border-radius:50%;background:var(--bio);box-shadow:0 0 8px var(--bio);}
+.island-line{width:18px;height:2px;background:rgba(255,130,90,0.5);border-radius:1px;}
 
-.visual-float{
-  position:absolute;
-  background:var(--cream);
-  border:1.5px solid var(--line2);
-  border-radius:12px;
-  padding:8px 14px;
-  font-size:0.72rem;
-  box-shadow:2px 3px 0 var(--line2);
-  white-space:nowrap;
+.phone-content{
+  padding:12px 10px 14px;
+  display:flex;flex-direction:column;gap:7px;
 }
-.vf1{top:10%;right:-20px;color:var(--sage);font-weight:600;}
-.vf2{bottom:20%;left:-30px;color:var(--muted);}
-.vf2 strong{color:var(--rust);}
-.vf3{top:50%;right:-25px;color:var(--muted);font-size:0.68rem;}
+
+.shield-status{
+  background:linear-gradient(135deg,rgba(255,100,60,0.08),rgba(180,50,20,0.10));
+  border:1px solid rgba(255,100,60,0.25);
+  border-radius:14px;padding:10px 12px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.ss-left{display:flex;align-items:center;gap:7px;}
+.ss-icon{font-size:0.9rem;}
+.ss-label{font-size:0.52rem;color:var(--bio2);font-weight:700;letter-spacing:1px;text-transform:uppercase;font-family:'DM Mono',monospace;}
+.ss-sub{font-size:0.44rem;color:rgba(0,100,255,0.4);font-family:'DM Mono',monospace;margin-top:1px;}
+.toggle-pill{
+  width:32px;height:18px;
+  background:linear-gradient(90deg,#ff6b4a,#ff5533);
+  border-radius:9px;position:relative;
+  box-shadow:0 0 12px rgba(255,107,74,0.35);
+}
+.toggle-pill::after{
+  content:'';position:absolute;right:2px;top:2px;
+  width:14px;height:14px;border-radius:50%;background:#fff;
+  box-shadow:0 1px 4px rgba(0,0,0,0.3);
+}
+
+.blocked-header{
+  font-family:'DM Mono',monospace;
+  font-size:0.44rem;color:var(--text3);
+  letter-spacing:2px;text-transform:uppercase;
+  padding:4px 2px 2px;
+}
+
+.block-item{
+  display:flex;align-items:center;gap:7px;
+  padding:7px 9px;
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.04);
+  border-radius:10px;
+  transition:all 0.3s;
+  animation:slide-in 0.4s ease both;
+}
+.block-item:nth-child(1){animation-delay:0.1s}
+.block-item:nth-child(2){animation-delay:0.2s}
+.block-item:nth-child(3){animation-delay:0.3s}
+@keyframes slide-in{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+
+.bi-avatar{
+  width:22px;height:22px;border-radius:50%;
+  background:linear-gradient(135deg,#3d1a0a,#8b2200);
+  border:1px solid rgba(255,79,26,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.5rem;color:var(--flame2);font-weight:700;
+  flex-shrink:0;font-family:'DM Mono',monospace;
+}
+.bi-info{flex:1;}
+.bi-num{font-size:0.52rem;color:var(--text3);font-family:'DM Mono',monospace;}
+.bi-time{font-size:0.42rem;color:var(--text3);opacity:0.5;font-family:'DM Mono',monospace;}
+.bi-badge{
+  font-family:'DM Mono',monospace;
+  font-size:0.42rem;font-weight:700;
+  background:rgba(255,79,26,0.12);color:var(--flame2);
+  border:1px solid rgba(255,79,26,0.2);
+  padding:2px 6px;border-radius:4px;
+  text-transform:uppercase;letter-spacing:0.5px;
+}
+
+.mpesa-card{
+  background:linear-gradient(135deg,rgba(0,77,40,0.3),rgba(0,30,15,0.4));
+  border:1px solid rgba(255,107,74,0.12);
+  border-radius:12px;padding:9px 11px;
+  display:flex;align-items:center;gap:8px;
+  margin-top:2px;
+}
+.mpesa-icon-wrap{font-size:1rem;}
+.mpesa-details{flex:1;}
+.mpesa-label{font-size:0.46rem;color:rgba(255,160,120,0.7);font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase;}
+.mpesa-amount{font-size:0.62rem;font-weight:700;color:var(--bio);font-family:'DM Mono',monospace;}
+.mpesa-check{font-size:0.55rem;color:var(--bio2);}
+
+/* floating chips */
+.chip{
+  position:absolute;
+  background:rgba(13,17,23,0.9);
+  border:1px solid var(--border2);
+  backdrop-filter:blur(16px);
+  border-radius:12px;padding:8px 14px;
+  white-space:nowrap;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  font-family:'DM Mono',monospace;
+  font-size:0.65rem;
+  animation:chip-float 4s ease-in-out infinite;
+}
+.chip-bio{color:var(--bio);border-color:rgba(0,100,255,0.2);}
+.chip-flame{color:var(--flame2);border-color:rgba(255,79,26,0.2);}
+.chip-sky{color:var(--sky);border-color:rgba(74,244,255,0.2);}
+.c1{top:5%;right:-80px;animation-delay:0s;}
+.c2{bottom:22%;left:-95px;animation-delay:-1.5s;}
+.c3{top:45%;right:-90px;animation-delay:-2.5s;}
+@keyframes chip-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
 /* ─── STRIPE ─── */
 .stripe{
-  background:var(--bark);
-  color:var(--cream);
-  padding:0;
+  position:relative;z-index:2;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
   overflow:hidden;
+  padding:0;
+  background:var(--surface);
 }
-.stripe-inner{
-  display:flex;justify-content:center;flex-wrap:wrap;
+.stripe-track{
+  display:flex;
+  animation:scroll-track 20s linear infinite;
+  width:max-content;
 }
+.stripe-track:hover{animation-play-state:paused;}
+@keyframes scroll-track{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .stripe-item{
-  display:flex;align-items:center;gap:7px;
-  padding:14px 26px;
-  font-size:0.8rem;font-weight:500;
-  color:rgba(245,240,232,0.65);
-  border-right:1px solid rgba(255,255,255,0.07);
+  display:flex;align-items:center;gap:8px;
+  padding:14px 28px;
+  font-family:'DM Mono',monospace;
+  font-size:0.7rem;font-weight:400;letter-spacing:2px;
+  color:var(--text3);
+  text-transform:uppercase;white-space:nowrap;
+  border-right:1px solid var(--border);
+  transition:color 0.3s;
 }
-.stripe-item:last-child{border-right:none;}
-.s-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.stripe-item:hover{color:var(--bio2);}
+.s-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
 
-/* ─── SECTIONS ─── */
-.wrap{max-width:1100px;margin:0 auto;padding:0 40px;}
-.section{padding:80px 40px;max-width:1100px;margin:0 auto;}
+/* ─── SHARED ─── */
+.section{
+  position:relative;z-index:2;
+  padding:100px 24px;
+  max-width:1200px;margin:0 auto;
+}
+.section-full{position:relative;z-index:2;padding:100px 24px;}
 
-.label{
-  display:inline-block;
-  font-size:0.7rem;font-weight:700;letter-spacing:1.8px;
-  text-transform:uppercase;color:var(--rust);
-  margin-bottom:12px;
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'DM Mono',monospace;
+  font-size:0.65rem;letter-spacing:3px;
+  color:var(--flame2);
+  text-transform:uppercase;
+  margin-bottom:16px;
 }
-h2.title{
-  font-family:'Fraunces',serif;
-  font-size:clamp(1.6rem,3.2vw,2.3rem);
-  font-weight:700;letter-spacing:-0.5px;
-  line-height:1.2;margin-bottom:10px;
-  color:var(--ink);
+.eyebrow-line{width:20px;height:1px;background:currentColor;}
+
+h2.big-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(3rem,8vw,6rem);
+  line-height:0.95;
+  letter-spacing:2px;
+  margin-bottom:16px;
 }
-h2.title em{font-style:italic;font-weight:400;color:var(--rust);}
-.subtitle{font-size:0.93rem;color:var(--muted);line-height:1.75;max-width:520px;margin-bottom:44px;}
+h2.big-title em{
+  font-family:'Instrument Serif',serif;
+  font-style:italic;
+  font-weight:400;
+  color:var(--bio);
+  letter-spacing:0;
+}
+.body-text{
+  font-family:'DM Mono',monospace;
+  font-size:0.82rem;color:var(--text2);
+  line-height:1.85;font-weight:300;
+  max-width:480px;
+}
 .center{text-align:center;}
-.center .subtitle{margin-left:auto;margin-right:auto;}
+.center .body-text{margin:0 auto;}
 
-/* ─── PROBLEM SECTION ─── */
-.problem-bg{
-  background:var(--warm);
-  border-top:1px solid var(--line2);
-  border-bottom:1px solid var(--line2);
+/* ─── PROBLEM ─── */
+.prob-bg{
+  background:rgba(20,26,38,0.7);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
 }
 
 .vs-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:2px;margin:48px 0 32px;
+  border:1px solid var(--border2);
+  border-radius:20px;overflow:hidden;
 }
-.vs-box{
-  border-radius:16px;padding:28px 26px;
-}
-.vs-box.bad{
-  background:#fff5f2;
-  border:1.5px solid rgba(192,68,14,0.2);
-}
-.vs-box.good{
-  background:#f0f7f2;
-  border:1.5px solid rgba(61,107,79,0.25);
-}
+.vs-box{padding:32px 28px;}
+.vs-box.bad{background:rgba(255,80,50,0.07);}
+.vs-box.good{background:rgba(255,107,74,0.06);}
 .vs-head{
-  font-size:0.72rem;font-weight:700;letter-spacing:1.5px;
-  text-transform:uppercase;margin-bottom:16px;
+  font-family:'DM Mono',monospace;
+  font-size:0.62rem;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:20px;
+  display:flex;align-items:center;gap:8px;
 }
-.vs-box.bad .vs-head{color:var(--rust);}
-.vs-box.good .vs-head{color:var(--sage);}
+.vs-box.bad .vs-head{color:var(--flame2);}
+.vs-box.good .vs-head{color:var(--bio2);}
+.vs-divider{width:1px;background:var(--border2);}
 .vs-list{list-style:none;}
 .vs-list li{
-  display:flex;align-items:flex-start;gap:9px;
-  font-size:0.875rem;color:var(--muted);
-  padding:7px 0;border-bottom:1px solid var(--line);
-  line-height:1.5;
+  display:flex;align-items:flex-start;gap:10px;
+  font-family:'DM Mono',monospace;
+  font-size:0.78rem;color:var(--text2);
+  padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.03);
+  line-height:1.6;font-weight:300;
 }
 .vs-list li:last-child{border-bottom:none;}
-.vs-list .icon{flex-shrink:0;font-size:0.8rem;margin-top:1px;}
+.v-icon{flex-shrink:0;font-size:0.75rem;margin-top:1px;}
 
+/* compare table */
+.table-wrap{
+  overflow:hidden;border-radius:16px;
+  border:1px solid var(--border2);
+  background:var(--surface);
+}
 .compare-table{
   width:100%;border-collapse:collapse;
-  background:#fff;
-  border-radius:14px;overflow:hidden;
-  border:1px solid var(--line2);
-  font-size:0.875rem;
+  font-family:'DM Mono',monospace;
+  font-size:0.78rem;
 }
-.compare-table thead tr{background:var(--warm);}
+.compare-table thead{background:rgba(255,255,255,0.03);}
 .compare-table th{
-  padding:13px 18px;text-align:left;
-  font-size:0.7rem;font-weight:700;letter-spacing:1.2px;
-  text-transform:uppercase;color:var(--muted);
-  border-bottom:1px solid var(--line2);
+  padding:14px 20px;text-align:left;
+  font-size:0.6rem;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--text3);
+  border-bottom:1px solid var(--border2);
 }
-.compare-table th.hl{color:var(--sage);}
+.compare-table th.hl{color:var(--bio2);}
 .compare-table td{
-  padding:12px 18px;
-  border-bottom:1px solid var(--line);
-  color:var(--muted);vertical-align:middle;
+  padding:13px 20px;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+  color:var(--text2);vertical-align:middle;
+  font-weight:300;
 }
-.compare-table td:first-child{color:var(--bark);font-weight:500;}
+.compare-table td:first-child{color:var(--text);font-weight:400;}
 .compare-table tbody tr:last-child td{border-bottom:none;}
-.compare-table tbody tr:hover td{background:rgba(245,240,232,0.5);}
-.compare-table .cs-col{background:rgba(90,145,104,0.04);}
-.tick{color:var(--sage2);font-weight:800;}
-.cross{color:var(--rust);}
-.note-sm{font-size:0.76rem;color:var(--muted2);font-style:italic;}
+.compare-table tbody tr{transition:background 0.2s;}
+.compare-table tbody tr:hover td{background:rgba(255,255,255,0.04);}
+.cs-col{background:rgba(255,107,74,0.05);}
+.tick{color:var(--bio2);font-weight:700;}
+.cross{color:var(--flame2);}
+.note-sm{font-size:0.65rem;color:var(--text3);font-style:italic;margin-left:4px;}
 
 .tip-box{
   display:flex;align-items:flex-start;gap:14px;
-  background:#fff8ec;
-  border:1px solid rgba(232,160,32,0.3);
-  border-radius:12px;padding:16px 20px;
-  margin-top:16px;font-size:0.85rem;color:var(--muted);line-height:1.7;
+  background:rgba(255,200,100,0.06);
+  border:1px solid rgba(255,180,80,0.2);
+  border-radius:14px;padding:20px;
+  margin-top:20px;
+  font-family:'DM Mono',monospace;
+  font-size:0.78rem;color:var(--text2);line-height:1.75;font-weight:300;
 }
-.tip-icon{font-size:1.2rem;flex-shrink:0;}
-.tip-box strong{color:var(--amber);}
+.tip-icon{font-size:1.1rem;flex-shrink:0;margin-top:2px;}
+.tip-box strong{color:var(--gold);}
 
 /* ─── FEATURES ─── */
 .feat-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:1px;
-  background:var(--line2);
-  border:1px solid var(--line2);
-  border-radius:18px;overflow:hidden;
+  gap:2px;margin-top:48px;
+  background:var(--border);
+  border:1px solid var(--border);
+  border-radius:20px;overflow:hidden;
 }
 .feat-card{
-  background:var(--cream);
-  padding:28px 24px;
-  transition:background 0.2s;
-}
-.feat-card:hover{background:var(--warm);}
-.feat-icon{
-  font-size:1.3rem;
-  width:42px;height:42px;
-  display:flex;align-items:center;justify-content:center;
-  border-radius:12px;
-  margin-bottom:14px;
-}
-.feat-card:nth-child(1) .feat-icon{background:rgba(192,68,14,0.1);}
-.feat-card:nth-child(2) .feat-icon{background:rgba(61,107,79,0.1);}
-.feat-card:nth-child(3) .feat-icon{background:rgba(45,110,143,0.1);}
-.feat-card:nth-child(4) .feat-icon{background:rgba(232,160,32,0.1);}
-.feat-card:nth-child(5) .feat-icon{background:rgba(192,68,14,0.08);}
-.feat-card:nth-child(6) .feat-icon{background:rgba(61,107,79,0.08);}
-.feat-name{font-weight:600;font-size:0.95rem;color:var(--ink);margin-bottom:6px;}
-.feat-desc{font-size:0.845rem;color:var(--muted);line-height:1.65;}
-
-/* ─── WHO ─── */
-.who-bg{
-  background:var(--bark);
-  color:var(--cream);
-  padding:80px 0;
-}
-.who-inner{max-width:1100px;margin:0 auto;padding:0 40px;}
-.who-inner .label{color:var(--amber2);}
-.who-inner .title{color:var(--cream);}
-.who-inner .title em{color:var(--amber2);}
-.who-inner .subtitle{color:rgba(245,240,232,0.6);}
-.who-grid{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:12px;
-}
-.who-card{
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:14px;padding:22px 18px;
-  transition:background 0.2s,transform 0.2s;
-  cursor:default;
-}
-.who-card:hover{background:rgba(255,255,255,0.08);transform:translateY(-3px);}
-.who-emoji{font-size:1.8rem;display:block;margin-bottom:10px;}
-.who-name{font-weight:600;font-size:0.88rem;color:var(--cream);margin-bottom:5px;}
-.who-desc{font-size:0.8rem;color:rgba(245,240,232,0.5);line-height:1.6;}
-
-/* ─── MPESA BANNER ─── */
-.mpesa-wrap{
-  background:linear-gradient(135deg,#1e3d2a,#0d2318);
-  border-radius:20px;
-  padding:44px 48px;
-  display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:start;
+  background:var(--surface);
+  padding:32px 28px;
+  transition:background 0.3s,transform 0.3s;
   position:relative;overflow:hidden;
 }
-.mpesa-wrap::before{
-  content:'';
-  position:absolute;bottom:-60px;right:-60px;
+.feat-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 0% 0%,rgba(255,107,74,0.06),transparent 60%);
+  opacity:0;transition:opacity 0.4s;
+}
+.feat-card:hover{background:rgba(35,45,66,0.95);}
+.feat-card:hover::before{opacity:1;}
+.feat-card:hover .feat-icon-wrap{box-shadow:0 0 30px var(--bio-glow);}
+
+.feat-icon-wrap{
+  width:44px;height:44px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border2);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;margin-bottom:16px;
+  transition:box-shadow 0.3s;
+}
+.feat-name{
+  font-family:'Syne',sans-serif;
+  font-weight:700;font-size:0.9rem;
+  color:var(--text);margin-bottom:8px;
+  letter-spacing:0.3px;
+}
+.feat-desc{
+  font-family:'DM Mono',monospace;
+  font-size:0.75rem;color:var(--text2);line-height:1.7;font-weight:300;
+}
+
+/* ─── WHO ─── */
+.who-section{
+  background:linear-gradient(180deg,#1c2333,#232d42);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.who-inner{max-width:1200px;margin:0 auto;padding:100px 24px;}
+
+.who-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:12px;margin-top:48px;
+}
+.who-card{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:18px;padding:24px 18px;
+  transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  cursor:default;position:relative;overflow:hidden;
+}
+.who-card::after{
+  content:'';position:absolute;
+  bottom:-40px;left:50%;transform:translateX(-50%);
+  width:60px;height:60px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,100,255,0.12),transparent);
+  opacity:0;transition:opacity 0.4s,bottom 0.4s;
+}
+.who-card:hover{
+  transform:translateY(-8px);
+  background:rgba(255,255,255,0.07);
+  border-color:rgba(0,100,255,0.2);
+  box-shadow:0 20px 60px rgba(0,50,150,0.15),0 0 30px rgba(255,107,74,0.08);
+}
+.who-card:hover::after{opacity:1;bottom:0;}
+.who-emoji{font-size:1.8rem;display:block;margin-bottom:12px;}
+.who-name{
+  font-family:'Syne',sans-serif;
+  font-weight:700;font-size:0.82rem;
+  color:var(--text);margin-bottom:6px;letter-spacing:0.3px;
+}
+.who-desc{
+  font-family:'DM Mono',monospace;
+  font-size:0.72rem;color:var(--text3);line-height:1.65;font-weight:300;
+}
+
+/* ─── MPESA ─── */
+.mpesa-section{background:var(--void);}
+.mpesa-card-big{
+  background:linear-gradient(135deg,rgba(255,107,74,0.08),rgba(180,50,30,0.12));
+  border:1px solid rgba(255,100,60,0.25);
+  border-radius:24px;padding:48px;
+  position:relative;overflow:hidden;
+  display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:start;
+}
+.mpesa-card-big::before{
+  content:'';position:absolute;
+  top:-80px;right:-80px;
   width:300px;height:300px;border-radius:50%;
-  background:radial-gradient(circle,rgba(90,145,104,0.12) 0%,transparent 70%);
+  background:radial-gradient(circle,rgba(255,107,74,0.1),transparent 70%);
 }
-.mpesa-big{font-size:2.8rem;padding-top:4px;}
-.mpesa-title{
-  font-family:'Fraunces',serif;
-  font-size:1.35rem;font-weight:600;
-  color:var(--sage3);margin-bottom:8px;
-  letter-spacing:-0.2px;
+.mpesa-card-big::after{
+  content:'';position:absolute;
+  bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,107,74,0.3),transparent);
 }
-.mpesa-desc{font-size:0.875rem;color:rgba(168,212,176,0.65);line-height:1.75;margin-bottom:18px;}
+.mpesa-big-icon{font-size:3.5rem;}
+.mpesa-title-big{
+  font-family:'Syne',sans-serif;
+  font-size:1.4rem;font-weight:700;
+  color:var(--bio);margin-bottom:10px;letter-spacing:0.3px;
+}
+.mpesa-desc-big{
+  font-family:'DM Mono',monospace;
+  font-size:0.8rem;color:rgba(255,160,120,0.7);
+  line-height:1.8;margin-bottom:24px;font-weight:300;
+}
 .mpesa-pills{display:flex;flex-wrap:wrap;gap:8px;}
 .mpesa-pill{
-  background:rgba(90,145,104,0.15);
-  border:1px solid rgba(90,145,104,0.3);
-  border-radius:20px;padding:4px 14px;
-  font-size:0.75rem;color:var(--sage3);font-weight:600;
+  background:rgba(255,107,74,0.10);
+  border:1px solid rgba(255,107,74,0.25);
+  border-radius:20px;padding:5px 16px;
+  font-family:'DM Mono',monospace;
+  font-size:0.7rem;color:var(--flame2);
+  letter-spacing:1px;
+  transition:all 0.3s;
 }
+.mpesa-pill:hover{background:rgba(255,107,74,0.12);border-color:rgba(0,100,255,0.4);box-shadow:0 0 16px rgba(255,107,74,0.08);}
 
 /* ─── STEPS ─── */
 .steps-grid{
   display:grid;grid-template-columns:repeat(3,1fr);
-  gap:32px;position:relative;
+  gap:32px;margin-top:60px;
+  position:relative;
 }
 .steps-grid::before{
-  content:'';
-  position:absolute;top:28px;left:calc(16.66% + 16px);right:calc(16.66% + 16px);
-  height:1px;background:var(--line2);
-  pointer-events:none;
+  content:'';position:absolute;
+  top:22px;left:calc(16.66% + 22px);right:calc(16.66% + 22px);
+  height:1px;
+  background:linear-gradient(90deg,var(--bio),var(--bio3),var(--bio));
+  opacity:0.3;
 }
 .step{
   display:flex;flex-direction:column;
   position:relative;
 }
 .step-num{
-  width:40px;height:40px;border-radius:50%;
-  background:var(--rust);color:#fff;
-  font-family:'Fraunces',serif;
-  font-size:1rem;font-weight:700;
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,var(--bio3),var(--bio2));
+  color:var(--void);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.3rem;
   display:flex;align-items:center;justify-content:center;
-  margin-bottom:16px;
-  box-shadow:2px 3px 0 var(--bark2);
-  flex-shrink:0;
+  margin-bottom:20px;flex-shrink:0;
+  box-shadow:0 0 20px var(--bio-glow);
+  position:relative;z-index:1;
 }
-.step-name{font-weight:600;font-size:0.97rem;color:var(--ink);margin-bottom:7px;}
-.step-desc{font-size:0.855rem;color:var(--muted);line-height:1.65;}
+.step-name{
+  font-family:'Syne',sans-serif;
+  font-weight:700;font-size:0.95rem;
+  color:var(--text);margin-bottom:10px;
+}
+.step-desc{
+  font-family:'DM Mono',monospace;
+  font-size:0.78rem;color:var(--text2);line-height:1.75;font-weight:300;
+}
 
 /* ─── INSTALL ─── */
+.install-bg{
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
 .install-box{
-  background:var(--warm);
-  border:1px solid var(--line2);
-  border-radius:18px;padding:40px;
+  background:#151b28;
+  border:1px solid var(--border2);
+  border-radius:20px;overflow:hidden;
 }
 .install-item{
-  display:flex;align-items:flex-start;gap:16px;
-  padding:18px 0;
-  border-bottom:1px solid var(--line2);
+  display:flex;align-items:flex-start;gap:18px;
+  padding:24px 28px;
+  border-bottom:1px solid var(--border);
+  transition:background 0.25s;
+  position:relative;overflow:hidden;
 }
+.install-item::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:3px;background:linear-gradient(180deg,var(--bio),var(--bio3));
+  opacity:0;transition:opacity 0.3s;
+}
+.install-item:hover{background:rgba(255,255,255,0.03);}
+.install-item:hover::before{opacity:1;}
 .install-item:last-of-type{border-bottom:none;}
 .install-num{
-  width:32px;height:32px;border-radius:50%;
-  background:var(--sage);color:#fff;
-  font-size:0.82rem;font-weight:700;
+  width:34px;height:34px;border-radius:50%;
+  background:var(--bio-glow2);
+  border:1px solid rgba(255,100,60,0.25);
+  color:var(--bio2);
+  font-family:'DM Mono',monospace;
+  font-size:0.8rem;font-weight:400;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;
 }
-.install-body strong{display:block;font-weight:600;font-size:0.9rem;color:var(--ink);margin-bottom:4px;}
-.install-body p{font-size:0.845rem;color:var(--muted);line-height:1.65;}
+.install-body strong{
+  display:block;
+  font-family:'Syne',sans-serif;
+  font-weight:700;font-size:0.9rem;color:var(--text);margin-bottom:6px;
+}
+.install-body p{
+  font-family:'DM Mono',monospace;
+  font-size:0.78rem;color:var(--text2);line-height:1.7;font-weight:300;
+}
 .install-warn{
   margin-top:20px;
-  background:#fff9ec;
-  border:1px solid rgba(232,160,32,0.25);
-  border-radius:10px;padding:15px 18px;
-  font-size:0.83rem;color:var(--muted);line-height:1.65;
+  background:rgba(255,200,100,0.06);
+  border:1px solid rgba(255,180,80,0.2);
+  border-radius:12px;padding:18px 20px;
+  font-family:'DM Mono',monospace;
+  font-size:0.78rem;color:var(--text2);line-height:1.7;font-weight:300;
+  display:flex;align-items:flex-start;gap:12px;
 }
-.install-warn strong{color:var(--amber);}
+.install-warn strong{color:var(--gold);}
 
 /* ─── CTA ─── */
 .cta-section{
-  background:var(--rust);
-  padding:80px 40px;
-  text-align:center;
   position:relative;overflow:hidden;
+  background:var(--void);
+  padding:120px 24px;text-align:center;
 }
-.cta-section::before{
-  content:'';
-  position:absolute;inset:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);
-  background-size:40px 40px;
+.cta-blob{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:600px;height:400px;
+  background:radial-gradient(ellipse,rgba(255,107,74,0.07) 0%,transparent 60%);
+  border-radius:50%;
+  animation:blob-pulse 4s ease-in-out infinite;
 }
+@keyframes blob-pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.1)}}
 .cta-section h2{
-  font-family:'Fraunces',serif;
-  font-size:clamp(1.8rem,4vw,2.8rem);
-  font-weight:700;color:#fff;letter-spacing:-0.8px;
-  margin-bottom:12px;position:relative;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(3rem,10vw,7rem);
+  line-height:0.95;letter-spacing:2px;
+  color:var(--text);
+  margin-bottom:16px;
+  position:relative;z-index:1;
 }
-.cta-section h2 em{font-style:italic;font-weight:400;opacity:0.8;}
-.cta-section p{color:rgba(255,255,255,0.7);font-size:0.93rem;margin-bottom:32px;position:relative;}
+.cta-section h2 em{
+  font-family:'Instrument Serif',serif;
+  font-style:italic;color:var(--bio);
+  letter-spacing:0;
+}
+.cta-section p{
+  font-family:'DM Mono',monospace;
+  color:var(--text3);font-size:0.82rem;
+  margin-bottom:36px;position:relative;z-index:1;
+  letter-spacing:1px;text-transform:uppercase;
+}
 .btn-cta{
-  display:inline-flex;align-items:center;gap:10px;
-  background:#fff;color:var(--rust);
-  font-size:0.9rem;font-weight:700;
-  padding:14px 32px;border-radius:10px;
-  text-decoration:none;
-  box-shadow:3px 4px 0 rgba(0,0,0,0.2);
-  transition:transform 0.15s,box-shadow 0.15s;
-  position:relative;
+  display:inline-flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg,var(--bio),var(--bio2));
+  color:var(--void);
+  font-family:'Syne',sans-serif;
+  font-size:0.9rem;font-weight:800;
+  padding:16px 36px;border-radius:var(--r2);
+  text-decoration:none;letter-spacing:1px;text-transform:uppercase;
+  box-shadow:0 0 60px var(--bio-glow),0 16px 48px rgba(0,0,0,0.5);
+  transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  position:relative;z-index:1;
 }
-.btn-cta:hover{transform:translate(-2px,-2px);box-shadow:5px 6px 0 rgba(0,0,0,0.25);}
+.btn-cta:hover{transform:translateY(-5px) scale(1.03);box-shadow:0 0 100px rgba(0,255,136,0.3),0 24px 64px rgba(0,0,0,0.5);}
 
 /* ─── FOOTER ─── */
 footer{
-  background:var(--bark);
-  color:rgba(245,240,232,0.5);
-  padding:24px 40px;
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  color:var(--text3);
+  padding:28px 24px;
   display:flex;align-items:center;justify-content:space-between;
-  flex-wrap:wrap;gap:10px;
-  font-size:0.78rem;
+  flex-wrap:wrap;gap:12px;
+  font-family:'DM Mono',monospace;
+  font-size:0.68rem;letter-spacing:1px;
+  text-transform:uppercase;
+  position:relative;z-index:2;
 }
-footer strong{color:rgba(245,240,232,0.8);}
+footer strong{color:var(--text2);}
 
-/* ─── ANIMATIONS ─── */
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-.hero>*{animation:fadeUp 0.6s ease both;}
-.hero>*:nth-child(2){animation-delay:0.08s}
-.hero>*:nth-child(3){animation-delay:0.16s}
+/* ─── REVEAL ANIMATIONS ─── */
+.reveal{
+  opacity:0;transform:translateY(24px);
+  transition:opacity 0.7s ease,transform 0.7s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0);}
 
-/* ─── RESPONSIVE ─── */
-@media(max-width:900px){
-  .hero{grid-template-columns:1fr;padding:60px 24px 50px;}
-  .hero-visual{display:none;}
+/* ─── MOBILE ─── */
+@media(max-width:960px){
+  .hero-grid{grid-template-columns:1fr;}
+  .hero-phone{display:none;}
   .who-grid{grid-template-columns:repeat(2,1fr);}
   .feat-grid{grid-template-columns:repeat(2,1fr);}
-  .steps-grid{grid-template-columns:1fr;gap:24px;}
+  .steps-grid{grid-template-columns:1fr;gap:28px;}
   .steps-grid::before{display:none;}
   .vs-grid{grid-template-columns:1fr;}
-  .mpesa-wrap{grid-template-columns:1fr;padding:28px 24px;}
-  .mpesa-big{display:none;}
+  .vs-divider{display:none;}
+  .mpesa-card-big{grid-template-columns:1fr;padding:32px 24px;}
+  .mpesa-big-icon{display:none;}
 }
 @media(max-width:640px){
-  nav{padding:12px 20px;}
-  .section{padding:60px 20px;}
+  nav{padding:12px 16px;}
+  .btn-nav{font-size:0.72rem;padding:8px 16px;}
+  .section{padding:70px 16px;}
+  .section-full{padding:70px 16px;}
+  .who-inner{padding:70px 16px;}
   .who-grid{grid-template-columns:1fr 1fr;}
   .feat-grid{grid-template-columns:1fr;}
-  footer{padding:20px;flex-direction:column;text-align:center;}
-  .install-box{padding:24px 20px;}
-  .cta-section{padding:60px 20px;}
+  .compare-table th:nth-child(2),.compare-table td:nth-child(2){display:none;}
+  footer{flex-direction:column;text-align:center;padding:20px 16px;}
+  .cta-section{padding:80px 16px;}
+  .install-box{border-radius:16px;}
+  .install-item{padding:20px 20px;}
+  .hero{padding:50px 16px 70px;}
+  .stripe-item{padding:12px 20px;font-size:0.62rem;}
 }
+
+/* ─── MAGNETIC HOVER (applied via JS) ─── */
+.magnetic{transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);}
 </style>
 </head>
 <body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- AMBIENT ORBS -->
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
 
 <!-- NAV -->
 <nav>
@@ -621,247 +927,239 @@ footer strong{color:rgba(245,240,232,0.8);}
     CallShield
   </a>
   <div class="nav-right">
-    <span class="nav-pill">Free</span>
-    <a class="btn-nav" href="https://github.com/Allan-Davis/CallShield/releases/download/v1.0.1/CallShield.apk" download>Download APK</a>
+    <span class="nav-badge">● Live</span>
+    <a class="btn-nav magnetic" href="https://github.com/Allan-Davis/CallShield/releases/download/v1.0.1/CallShield.apk" download>↓ Free APK</a>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-content">
-    <div class="hero-tag"><span class="hero-tag-dot"></span>Android · Built by Allan Davis 🇰🇪</div>
-    <h1>Spam calls stop<br>here. <em>Silently.</em><br><span class="green">M-Pesa always</span><br>gets through.</h1>
-    <p class="hero-sub">CallShield runs quietly in the background. Unknown numbers hear you're offline. You see nothing. No fuss, no sign-ups — just peace.</p>
-    <div class="hero-actions">
-      <a class="btn-main" href="https://github.com/Allan-Davis/CallShield/releases/download/v1.0.1/CallShield.apk" download>
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 12l-4-4h2.5V3h3v5H12L8 12z"/><path d="M2 14h12v-2H2v2z"/></svg>
-        Download Free APK
-      </a>
-      <a class="btn-outline" href="#how-it-works">See how it works →</a>
+  <div class="hero-grid">
+    <div class="hero-content">
+      <div class="hero-eyebrow"><span class="hero-eyebrow-line"></span>Android · Built by Allan Davis 🇰🇪</div>
+      <h1>SPAM<br><span class="accent">CALLS</span><br><span class="sub-word">stop here.</span></h1>
+      <div class="hero-divider"></div>
+      <p class="hero-sub">CallShield intercepts unknown numbers before they reach you. The caller hears you're offline. You see nothing. No accounts, no servers, no nonsense — just silence.</p>
+      <div class="hero-actions">
+        <a class="btn-main magnetic" href="https://github.com/Allan-Davis/CallShield/releases/download/v1.0.1/CallShield.apk" download>
+          <span>↓</span> Download Free APK
+        </a>
+        <a class="btn-ghost" href="#how-it-works">See how it works →</a>
+      </div>
+      <div class="hero-meta">
+        <div class="hero-meta-item"><span class="meta-dot"></span>No account</div>
+        <div class="hero-meta-item"><span class="meta-dot"></span>No ads</div>
+        <div class="hero-meta-item"><span class="meta-dot"></span>100% offline</div>
+        <div class="hero-meta-item"><span class="meta-dot"></span>Free forever</div>
+      </div>
     </div>
-    <p class="hero-fine">No account needed <span>·</span> No ads <span>·</span> 100% offline <span>·</span> Free forever</p>
-  </div>
-  <div class="hero-visual">
-    <div class="phone-frame">
-      <div class="phone-notch"></div>
-      <div class="phone-screen">
-        <div class="phone-status"><span>9:41</span><span>●●●</span></div>
-        <div class="phone-app">
-          <div class="phone-shield-row">
-            <span class="phone-shield-label">🛡 Shield Active</span>
-            <div class="phone-toggle"></div>
-          </div>
-          <div class="phone-blocked-title">Recently Blocked</div>
-          <div class="phone-block-item">
-            <div class="phone-avatar">?</div>
-            <div class="phone-num">+254 7XX XXX 891</div>
-            <div class="phone-badge-block">blocked</div>
-          </div>
-          <div class="phone-block-item">
-            <div class="phone-avatar">?</div>
-            <div class="phone-num">+254 7XX XXX 342</div>
-            <div class="phone-badge-block">blocked</div>
-          </div>
-          <div class="phone-block-item">
-            <div class="phone-avatar">?</div>
-            <div class="phone-num">Unknown SMS</div>
-            <div class="phone-badge-block">blocked</div>
-          </div>
-          <div class="phone-mpesa">
-            <div class="phone-mpesa-icon">💚</div>
-            <div>
-              <div class="phone-mpesa-text">M-Pesa transaction</div>
-              <div class="phone-mpesa-amount">Ksh 2,500 received ✓</div>
+    <div class="hero-phone">
+      <div class="phone-wrap">
+        <div class="phone-glow-ring"></div>
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-dynamic-island">
+              <div class="island-dot"></div>
+              <div class="island-line"></div>
+              <div class="island-dot"></div>
+            </div>
+            <div class="phone-content">
+              <div class="shield-status">
+                <div class="ss-left">
+                  <span class="ss-icon">🛡</span>
+                  <div>
+                    <div class="ss-label">Shield Active</div>
+                    <div class="ss-sub">24 blocked today</div>
+                  </div>
+                </div>
+                <div class="toggle-pill"></div>
+              </div>
+              <div class="blocked-header">Recently Blocked</div>
+              <div class="block-item">
+                <div class="bi-avatar">?</div>
+                <div class="bi-info">
+                  <div class="bi-num">+254 7XX XXX 891</div>
+                  <div class="bi-time">2 min ago</div>
+                </div>
+                <div class="bi-badge">blocked</div>
+              </div>
+              <div class="block-item">
+                <div class="bi-avatar">?</div>
+                <div class="bi-info">
+                  <div class="bi-num">+254 7XX XXX 342</div>
+                  <div class="bi-time">11 min ago</div>
+                </div>
+                <div class="bi-badge">blocked</div>
+              </div>
+              <div class="block-item">
+                <div class="bi-avatar">SMS</div>
+                <div class="bi-info">
+                  <div class="bi-num">Unknown SMS</div>
+                  <div class="bi-time">32 min ago</div>
+                </div>
+                <div class="bi-badge">blocked</div>
+              </div>
+              <div class="mpesa-card">
+                <div class="mpesa-icon-wrap">💚</div>
+                <div class="mpesa-details">
+                  <div class="mpesa-label">M-Pesa · Always allowed</div>
+                  <div class="mpesa-amount">Ksh 2,500 received ✓</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        <div class="chip chip-bio c1">✓ Zero interruptions</div>
+        <div class="chip chip-flame c2">Caller hears <strong>"offline"</strong></div>
+        <div class="chip chip-sky c3">⚡ 24 blocked today</div>
       </div>
     </div>
-    <div class="visual-float vf1">✓ Zero interruptions</div>
-    <div class="visual-float vf2">Caller hears <strong>"offline"</strong></div>
-    <div class="visual-float vf3">24 blocked today</div>
   </div>
 </section>
 
 <!-- STRIPE -->
 <div class="stripe">
-  <div class="stripe-inner">
-    <div class="stripe-item"><span class="s-dot" style="background:#5a9168"></span>100% Offline</div>
-    <div class="stripe-item"><span class="s-dot" style="background:#e8a020"></span>No Data Collected</div>
-    <div class="stripe-item"><span class="s-dot" style="background:#c0440e"></span>No Ads, Ever</div>
-    <div class="stripe-item"><span class="s-dot" style="background:#4a9abf"></span>Completely Free</div>
-    <div class="stripe-item"><span class="s-dot" style="background:#5a9168"></span>Built for Kenya 🇰🇪</div>
+  <div class="stripe-track">
+    <div class="stripe-item"><span class="s-dot" style="background:#00ff88"></span>100% Offline</div>
+    <div class="stripe-item"><span class="s-dot" style="background:#f5c842"></span>No Data Collected</div>
+    <div class="stripe-item"><span class="s-dot" style="background:#ff4f1a"></span>No Ads, Ever</div>
+    <div class="stripe-item"><span class="s-dot" style="background:#4af4ff"></span>Completely Free</div>
+    <div class="stripe-item"><span class="s-dot" style="background:#00ff88"></span>Built for Kenya 🇰🇪</div>
+    <div class="stripe-item"><span class="s-dot" style="background:#f5c842"></span>M-Pesa Protected</div>
+    <div class="stripe-item"><span class="s-dot" style="background:#ff4f1a"></span>Open Source</div>
+    <!-- duplicate for seamless loop -->
+    <div class="stripe-item"><span class="s-dot" style="background:#00ff88"></span>100% Offline</div>
+    <div class="stripe-item"><span class="s-dot" style="background:#f5c842"></span>No Data Collected</div>
+    <div class="stripe-item"><span class="s-dot" style="background:#ff4f1a"></span>No Ads, Ever</div>
+    <div class="stripe-item"><span class="s-dot" style="background:#4af4ff"></span>Completely Free</div>
+    <div class="stripe-item"><span class="s-dot" style="background:#00ff88"></span>Built for Kenya 🇰🇪</div>
+    <div class="stripe-item"><span class="s-dot" style="background:#f5c842"></span>M-Pesa Protected</div>
+    <div class="stripe-item"><span class="s-dot" style="background:#ff4f1a"></span>Open Source</div>
   </div>
 </div>
 
 <!-- PROBLEM -->
-<div class="problem-bg">
-<section class="section">
-  <div class="label">The Problem</div>
-  <h2 class="title">Your phone's built-in block<br>isn't actually <em>protecting you</em></h2>
-  <p class="subtitle">There's a big difference between blocking after you've already been disturbed, and never being disturbed at all.</p>
+<div class="prob-bg">
+<section class="section reveal">
+  <div class="eyebrow"><span class="eyebrow-line"></span>The Problem</div>
+  <h2 class="big-title">Your phone's<br>block isn't<br><em>protecting you</em></h2>
+  <p class="body-text" style="margin-bottom:0;">There's a big difference between blocking after you've been disturbed — and never being disturbed at all.</p>
 
   <div class="vs-grid">
     <div class="vs-box bad">
       <div class="vs-head">📱 Phone Built-in</div>
       <ul class="vs-list">
-        <li><span class="icon">✗</span>You still see the call ring in</li>
-        <li><span class="icon">✗</span>The notification still pops up</li>
-        <li><span class="icon">✗</span>You get distracted, lose focus</li>
-        <li><span class="icon">✗</span>Then you block — after the damage</li>
+        <li><span class="v-icon">✗</span>You still see the call ring in</li>
+        <li><span class="v-icon">✗</span>The notification still pops up</li>
+        <li><span class="v-icon">✗</span>You get distracted, lose focus</li>
+        <li><span class="v-icon">✗</span>You block — after the damage is done</li>
       </ul>
     </div>
     <div class="vs-box good">
       <div class="vs-head">🛡️ CallShield</div>
       <ul class="vs-list">
-        <li><span class="icon">✓</span>Call never reaches your phone</li>
-        <li><span class="icon">✓</span>Caller instantly hears "offline"</li>
-        <li><span class="icon">✓</span>You see absolutely nothing</li>
-        <li><span class="icon">✓</span>Protected before anything happens</li>
+        <li><span class="v-icon">✓</span>Call never reaches your phone</li>
+        <li><span class="v-icon">✓</span>Caller instantly hears "offline"</li>
+        <li><span class="v-icon">✓</span>You see absolutely nothing</li>
+        <li><span class="v-icon">✓</span>Protected before anything happens</li>
       </ul>
     </div>
   </div>
 
-  <table class="compare-table">
-    <thead>
-      <tr>
-        <th>Feature</th>
-        <th>Phone Built-in</th>
-        <th class="hl">🛡️ CallShield</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Block unknown numbers</td>
-        <td><span class="cross">✗</span></td>
-        <td class="cs-col"><span class="tick">✓</span></td>
-      </tr>
-      <tr>
-        <td>Schedule blocking (nights/weekends)</td>
-        <td><span class="cross">✗</span></td>
-        <td class="cs-col"><span class="tick">✓</span></td>
-      </tr>
-      <tr>
-        <td>Block SMS silently</td>
-        <td><span class="note-sm">Limited</span></td>
-        <td class="cs-col"><span class="tick">✓</span></td>
-      </tr>
-      <tr>
-        <td>Caller hears "offline"</td>
-        <td><span class="cross">✗</span> <span class="note-sm">rings → voicemail</span></td>
-        <td class="cs-col"><span class="tick">✓</span> <span class="note-sm">instant</span></td>
-      </tr>
-      <tr>
-        <td>Whitelist specific people</td>
-        <td><span class="cross">✗</span></td>
-        <td class="cs-col"><span class="tick">✓</span></td>
-      </tr>
-      <tr>
-        <td>Activity log</td>
-        <td><span class="cross">✗</span></td>
-        <td class="cs-col"><span class="tick">✓</span></td>
-      </tr>
-      <tr>
-        <td>M-Pesa always allowed</td>
-        <td><span class="cross">✗</span> <span class="note-sm">manual</span></td>
-        <td class="cs-col"><span class="tick">✓</span> <span class="note-sm">automatic</span></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-wrap">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Phone Built-in</th>
+          <th class="hl">🛡️ CallShield</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Block unknown numbers</td><td><span class="cross">✗</span></td><td class="cs-col"><span class="tick">✓</span></td></tr>
+        <tr><td>Schedule blocking</td><td><span class="cross">✗</span></td><td class="cs-col"><span class="tick">✓</span></td></tr>
+        <tr><td>Block SMS silently</td><td><span class="note-sm">Limited</span></td><td class="cs-col"><span class="tick">✓</span></td></tr>
+        <tr><td>Caller hears "offline"</td><td><span class="cross">✗</span> <span class="note-sm">rings → voicemail</span></td><td class="cs-col"><span class="tick">✓</span> <span class="note-sm">instant</span></td></tr>
+        <tr><td>Whitelist contacts</td><td><span class="cross">✗</span></td><td class="cs-col"><span class="tick">✓</span></td></tr>
+        <tr><td>Activity log</td><td><span class="cross">✗</span></td><td class="cs-col"><span class="tick">✓</span></td></tr>
+        <tr><td>M-Pesa auto-allowed</td><td><span class="cross">✗</span> <span class="note-sm">manual</span></td><td class="cs-col"><span class="tick">✓</span> <span class="note-sm">automatic</span></td></tr>
+      </tbody>
+    </table>
+  </div>
 
   <div class="tip-box">
     <span class="tip-icon">✈️</span>
-    <div><strong>Airplane mode doesn't cut it.</strong> It blocks M-Pesa notifications too — you miss real money alerts while trying to dodge spam. CallShield separates the bad from the good automatically.</div>
+    <div><strong>Airplane mode doesn't cut it.</strong> It blocks M-Pesa notifications too — you miss real money alerts while trying to dodge spam. CallShield separates the bad from the good, automatically.</div>
   </div>
 </section>
 </div>
 
 <!-- FEATURES -->
-<section class="section">
+<section class="section reveal">
   <div class="center">
-    <div class="label">Features</div>
-    <h2 class="title">Everything you need,<br><em>nothing you don't</em></h2>
-    <p class="subtitle">Powerful protection that runs silently and stays completely out of your way.</p>
+    <div class="eyebrow" style="justify-content:center;"><span class="eyebrow-line"></span>Features<span class="eyebrow-line"></span></div>
+    <h2 class="big-title">Everything<br>you need,<br><em>nothing you don't</em></h2>
+    <p class="body-text" style="margin-bottom:0;">Powerful protection that runs silently and stays completely out of your way.</p>
   </div>
   <div class="feat-grid">
     <div class="feat-card">
-      <div class="feat-icon">📞</div>
+      <div class="feat-icon-wrap">📞</div>
       <div class="feat-name">Call Blocking</div>
-      <div class="feat-desc">Unknown or blocked numbers get rejected instantly. The caller hears "unavailable" — they never even know.</div>
+      <div class="feat-desc">Unknown or blocked numbers get rejected instantly. The caller hears "unavailable" — they never know what hit them.</div>
     </div>
     <div class="feat-card">
-      <div class="feat-icon">💬</div>
+      <div class="feat-icon-wrap">💬</div>
       <div class="feat-name">SMS Blocking</div>
       <div class="feat-desc">Spam texts are intercepted before they land. No scam messages, no fake promos, no phishing attempts.</div>
     </div>
     <div class="feat-card">
-      <div class="feat-icon">✅</div>
+      <div class="feat-icon-wrap">✅</div>
       <div class="feat-name">Whitelist Contacts</div>
-      <div class="feat-desc">People you trust always get through. Add family, colleagues, clients — even with the shield fully on.</div>
+      <div class="feat-desc">People you trust always get through. Family, colleagues, clients — even with the shield fully on.</div>
     </div>
     <div class="feat-card">
-      <div class="feat-icon">🕐</div>
+      <div class="feat-icon-wrap">🕐</div>
       <div class="feat-name">Smart Schedules</div>
-      <div class="feat-desc">Set the shield to activate on nights, weekends, or any window you choose. Set once, forget about it.</div>
+      <div class="feat-desc">Set the shield to activate on nights, weekends, or any window you choose. Set once, forget forever.</div>
     </div>
     <div class="feat-card">
-      <div class="feat-icon">📋</div>
+      <div class="feat-icon-wrap">📋</div>
       <div class="feat-name">Activity Log</div>
-      <div class="feat-desc">Full history of every blocked call and SMS — who, when, how many times. You stay in control.</div>
+      <div class="feat-desc">Full history of every blocked call and SMS — who, when, how many times. You stay in complete control.</div>
     </div>
     <div class="feat-card">
-      <div class="feat-icon">🔋</div>
+      <div class="feat-icon-wrap">🔋</div>
       <div class="feat-name">Background Running</div>
-      <div class="feat-desc">Lightweight service that works even when your screen is off. No noticeable battery drain.</div>
+      <div class="feat-desc">Lightweight service that works even when your screen is off. Zero noticeable battery drain.</div>
     </div>
   </div>
 </section>
 
-<!-- WHO NEEDS THIS -->
-<div class="who-bg">
-<div class="who-inner">
+<!-- WHO -->
+<div class="who-section">
+<div class="who-inner reveal">
   <div class="center">
-    <div class="label">Who it's for</div>
-    <h2 class="title">Made for <em>real people</em> in Kenya</h2>
-    <p class="subtitle">If any of these sound like you, CallShield was built with you in mind.</p>
+    <div class="eyebrow" style="justify-content:center;color:var(--gold);"><span class="eyebrow-line"></span>Who it's for<span class="eyebrow-line"></span></div>
+    <h2 class="big-title" style="color:var(--text);">Made for <em>real people</em><br>in Kenya</h2>
+    <p class="body-text">If any of these sound like you, CallShield was built with you in mind.</p>
   </div>
   <div class="who-grid">
-    <div class="who-card">
-      <span class="who-emoji">💼</span>
-      <div class="who-name">Business People</div>
-      <div class="who-desc">Clients only during work hours. Block everyone else at night and weekends — automatically.</div>
-    </div>
-    <div class="who-card">
-      <span class="who-emoji">👨‍👩‍👧</span>
-      <div class="who-name">Parents</div>
-      <div class="who-desc">Block all unknown numbers on your child's phone. Only family and school get through.</div>
-    </div>
-    <div class="who-card">
-      <span class="who-emoji">🚨</span>
-      <div class="who-name">Harassment Victims</div>
-      <div class="who-desc">Ex-partners, debt collectors, scammers — they hear you're permanently offline.</div>
-    </div>
-    <div class="who-card">
-      <span class="who-emoji">📢</span>
-      <div class="who-name">Public Numbers</div>
-      <div class="who-desc">Doctors, teachers, traders whose number got leaked. Control who actually reaches you.</div>
-    </div>
-    <div class="who-card">
-      <span class="who-emoji">🏦</span>
-      <div class="who-name">Fraud Targets</div>
-      <div class="who-desc">Fake M-Pesa SMS scams? Block fraudsters while real M-Pesa always comes through.</div>
-    </div>
+    <div class="who-card"><span class="who-emoji">💼</span><div class="who-name">Business People</div><div class="who-desc">Clients only during work hours. Block everyone else at night and weekends — automatically.</div></div>
+    <div class="who-card"><span class="who-emoji">👨‍👩‍👧</span><div class="who-name">Parents</div><div class="who-desc">Block all unknown numbers on your child's phone. Only family and school get through.</div></div>
+    <div class="who-card"><span class="who-emoji">🚨</span><div class="who-name">Harassment Victims</div><div class="who-desc">Ex-partners, debt collectors, scammers — they hear you're permanently offline.</div></div>
+    <div class="who-card"><span class="who-emoji">📢</span><div class="who-name">Public Numbers</div><div class="who-desc">Doctors, teachers, traders whose number got leaked. Control who actually reaches you.</div></div>
+    <div class="who-card"><span class="who-emoji">🏦</span><div class="who-name">Fraud Targets</div><div class="who-desc">Fake M-Pesa SMS scams? Block fraudsters while real M-Pesa always comes through.</div></div>
   </div>
 </div>
 </div>
 
 <!-- MPESA -->
-<section class="section">
-  <div class="mpesa-wrap">
-    <div class="mpesa-big">💚</div>
+<section class="section mpesa-section reveal">
+  <div class="mpesa-card-big">
+    <div class="mpesa-big-icon">💚</div>
     <div>
-      <div class="mpesa-title">M-Pesa & Mobile Money — always protected</div>
-      <p class="mpesa-desc">Financial numbers are hardcoded to never be blocked, regardless of your shield settings. Your transactions always come through, no exceptions.</p>
+      <div class="mpesa-title-big">M-Pesa & Mobile Money — always protected</div>
+      <p class="mpesa-desc-big">Financial numbers are hardcoded to never be blocked, regardless of your shield settings. Your transactions always come through, no exceptions, no configuration needed.</p>
       <div class="mpesa-pills">
         <span class="mpesa-pill">M-Pesa 234</span>
         <span class="mpesa-pill">Safaricom 200</span>
@@ -875,18 +1173,18 @@ footer strong{color:rgba(245,240,232,0.8);}
 </section>
 
 <!-- HOW IT WORKS -->
-<div class="problem-bg">
-<section class="section" id="how-it-works">
+<div class="prob-bg">
+<section class="section reveal" id="how-it-works">
   <div class="center">
-    <div class="label">Setup</div>
-    <h2 class="title">Up and running in <em>3 steps</em></h2>
-    <p class="subtitle">Under a minute from download to protected.</p>
+    <div class="eyebrow" style="justify-content:center;"><span class="eyebrow-line"></span>Setup<span class="eyebrow-line"></span></div>
+    <h2 class="big-title">Up and running<br>in <em>3 steps</em></h2>
+    <p class="body-text">Under a minute from download to fully protected.</p>
   </div>
   <div class="steps-grid">
     <div class="step">
       <div class="step-num">1</div>
       <div class="step-name">Download & Install</div>
-      <div class="step-desc">Download the APK and install it on your Android. Grant the permissions when the app asks — they're needed for blocking to work.</div>
+      <div class="step-desc">Download the APK and install it on your Android. Grant the permissions when the app asks — they're required for blocking to work.</div>
     </div>
     <div class="step">
       <div class="step-num">2</div>
@@ -896,68 +1194,125 @@ footer strong{color:rgba(245,240,232,0.8);}
     <div class="step">
       <div class="step-num">3</div>
       <div class="step-name">Activate Shield</div>
-      <div class="step-desc">Tap the shield. Everyone else is blocked. You're protected — completely silently.</div>
+      <div class="step-desc">Tap the shield. Everyone else is blocked. You're protected — completely, silently, instantly.</div>
     </div>
   </div>
 </section>
 </div>
 
 <!-- INSTALL GUIDE -->
-<section class="section">
-  <div class="center">
-    <div class="label">Installation</div>
-    <h2 class="title">Install guide</h2>
-    <p class="subtitle">CallShield isn't on the Play Store — here's exactly what to do, step by step.</p>
+<div class="install-bg">
+<section class="section reveal">
+  <div class="center" style="margin-bottom:48px;">
+    <div class="eyebrow" style="justify-content:center;"><span class="eyebrow-line"></span>Installation<span class="eyebrow-line"></span></div>
+    <h2 class="big-title">Install guide</h2>
+    <p class="body-text">CallShield isn't on the Play Store — here's exactly what to do.</p>
   </div>
   <div class="install-box">
     <div class="install-item">
-      <div class="install-num">1</div>
+      <div class="install-num">01</div>
       <div class="install-body">
         <strong>Download the APK</strong>
         <p>Tap the Download button on this page. The file saves to your Downloads folder automatically.</p>
       </div>
     </div>
     <div class="install-item">
-      <div class="install-num">2</div>
+      <div class="install-num">02</div>
       <div class="install-body">
         <strong>Allow Unknown Sources</strong>
         <p>Go to Settings → Apps → your browser (or Files app) → Install unknown apps → Allow.</p>
       </div>
     </div>
     <div class="install-item">
-      <div class="install-num">3</div>
+      <div class="install-num">03</div>
       <div class="install-body">
         <strong>Open & Install the APK</strong>
         <p>Open Files app → Downloads → tap the CallShield APK → Install.</p>
       </div>
     </div>
     <div class="install-item">
-      <div class="install-num">4</div>
+      <div class="install-num">04</div>
       <div class="install-body">
         <strong>Grant Permissions</strong>
         <p>Open CallShield → tap "Grant Permissions & Continue" → accept all prompts. These are required for blocking to work.</p>
       </div>
     </div>
-    <div class="install-warn">
-      <strong>⚠️ See a Play Protect warning?</strong> Tap <strong>More details → Install anyway.</strong> Android shows this for any app outside the Play Store. CallShield is completely safe — your data never leaves your device.
-    </div>
+  </div>
+  <div class="install-warn">
+    <span>⚠️</span>
+    <div><strong>See a Play Protect warning?</strong> Tap More details → Install anyway. Android shows this for any app outside the Play Store. CallShield is completely safe — your data never leaves your device.</div>
   </div>
 </section>
+</div>
 
 <!-- CTA -->
 <div class="cta-section">
-  <h2>Stop the spam.<br><em>Reclaim your quiet.</em></h2>
-  <p>Free forever. No sign-up. Works completely offline.</p>
-  <a class="btn-cta" href="https://github.com/Allan-Davis/CallShield/releases/download/v1.0.1/app-release.apk" download>
-    ⬇️ Download Free APK
+  <div class="cta-blob"></div>
+  <h2>Stop the<br>spam. <em>Reclaim</em><br>your quiet.</h2>
+  <p>Free forever · No sign-up · Works completely offline</p>
+  <a class="btn-cta magnetic" href="https://github.com/Allan-Davis/CallShield/releases/download/v1.0.1/app-release.apk" download>
+    ↓ Download Free APK
   </a>
 </div>
 
 <!-- FOOTER -->
 <footer>
-  <span><strong>CallShield</strong> · Free Android App · Built by Allan Davis </span>
+  <span><strong>CallShield</strong> · Free Android App · Built by Allan Davis</span>
   <span>All blocking runs on-device · No internet required</span>
 </footer>
 
+<script>
+// ─── CURSOR ───
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx-5+'px';
+  cursor.style.top = my-5+'px';
+});
+function animRing(){
+  rx += (mx-rx-18)*0.12;
+  ry += (my-ry-18)*0.12;
+  ring.style.left = rx+'px';
+  ring.style.top = ry+'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+document.querySelectorAll('a,button,.who-card,.feat-card,.mpesa-pill').forEach(el => {
+  el.addEventListener('mouseenter',()=>{cursor.style.transform='scale(2.5)';ring.style.transform='scale(1.5)';ring.style.borderColor='rgba(0,255,136,0.6)';});
+  el.addEventListener('mouseleave',()=>{cursor.style.transform='scale(1)';ring.style.transform='scale(1)';ring.style.borderColor='rgba(0,100,255,0.4)';});
+});
+
+// ─── MAGNETIC HOVER ───
+document.querySelectorAll('.magnetic').forEach(el => {
+  el.addEventListener('mousemove', e => {
+    const r = el.getBoundingClientRect();
+    const x = e.clientX - r.left - r.width/2;
+    const y = e.clientY - r.top - r.height/2;
+    el.style.transform = `translate(${x*0.25}px,${y*0.35}px)`;
+  });
+  el.addEventListener('mouseleave', () => {
+    el.style.transform = '';
+  });
+});
+
+// ─── SCROLL REVEAL ───
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ─── HERO STAGGER ───
+const heroItems = document.querySelectorAll('.hero-content > *');
+heroItems.forEach((el,i) => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  setTimeout(()=>{el.style.opacity='1';el.style.transform='';},200+i*100);
+});
+</script>
 </body>
 </html>
